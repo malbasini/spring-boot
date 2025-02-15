@@ -1,0 +1,156 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{header :: headerFragment}"></div>
+<br>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Dettaglio corso</title>
+    <div class="row">
+        <div class="col-md-12">
+            <th:block th:if="${!#strings.isEmpty(message)}">
+                <div class="alert alert-danger" role="alert">
+                    <th:block th:text="${message}"></th:block>
+                </div>
+            </th:block>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <th:block th:if="${!#strings.isEmpty(message1)}">
+                <div class="alert alert-info" role="alert">
+                    <th:block th:text="${message1}"></th:block>
+                </div>
+            </th:block>
+        </div>
+    </div>
+</head>
+<body>
+<h1>Dettaglio corso</h1>
+<br>
+<section class="course-info">
+    <div class="row">
+        <div class="col-md-9">
+        </div>
+        <div class="col-md-3 d-flex align-items-center">
+            <th:block th:if="${isOwner==true && isTeacher==true}">
+                <a class="btn btn-primary btn-block" th:href="|@{/courses/{courseId}/edit(courseId=${course.getId()})}|">Modifica</a>&nbsp;&nbsp;&nbsp;
+            </th:block>&nbsp;
+            <br>
+            <th:block th:if="${((isStudent==true) && (subscription==false))}">
+                <th:block th:if="${provider == 'paypal'}">
+                    <form  th:action="|@{/paypal/{courseId}/pay(courseId=${course.getId()})}|" method="get">
+                        <button type="submit" class="btn btn-warning btn-bloc">Iscriviti</button>
+                    </form>
+                </th:block>
+                <th:block th:if="${provider == 'stripe'}">
+                    <form th:action="|/stripe/${courseId}/checkout(courseId=${course.getId()})|" method="get">
+                         <button type="submit" class="btn btn-warning btn-bloc">Iscriviti</button>
+                    </form>
+                </th:block>
+            </th:block>&nbsp;
+            <br>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9">
+            <th:block th:utext="${course.getDescription()}"></th:block>
+        </div>
+        <div class="col-md-3">
+            <aside>
+                <author>di <th:block th:text="${course.getAuthor()}"></th:block></author>
+                <div class="rating" title="${course.rating}">
+                    <th:block th:each="i : ${#numbers.sequence(1, course.fullStars,1)}">
+                        <i class="fas fa-star" style="color: gold;"></i>
+                    </th:block>
+                    <th:block th:if="${course.hasHalfStar}">
+                        <i class="fas fa-star-half-alt" style="color: gold;"></i>
+                    </th:block>
+                    <th:block th:each="i : ${#numbers.sequence(1, course.emptyStars,1)}">
+                        <i class="far fa-star" style="color: gold;"></i>
+                    </th:block>
+                </div>
+                <div class="price">
+                    <span class="current-price">EUR  <th:block th:text="${course.getCurrentPriceAmount()}"></th:block></span>
+                    <th:block th:if="${course.getFullPriceAmount() != course.getCurrentPriceAmount()}">
+                        <br><span class="full-price">EUR   <th:block th:text="${course.getFullPriceAmount()}"></th:block></span>
+                    </th:block>
+                </div>
+                <th:block th:if="${#strings.contains(course.getImagePath(),'uploads')}">
+                    <img id="imagePath1" name="imagePath" th:src="${course.getImagePath()}" th:title="|@{/images/}${course.getImagePath()}|" alt="image" class="img-fluid course-image" />
+                </th:block>
+                <th:block th:if="${!#strings.contains(course.getImagePath(),'uploads')}">
+                    <img id="imagePath2" name="imagePath" th:src="|@{/images/}${course.getImagePath()}|" th:title="|@{/images/}${course.getImagePath()}|" alt="image" class="img-fluid course-image" />
+                </th:block>
+                <th:block th:if = "${subscription==true && isStudent==true}">
+                    <a th:href="|@{/courses/{courseId}/question(courseId=${course.getId()})}|" class="btn btn-block btn-outline-secondary mt-3">Fai una domanda</a>
+                    <a th:href="|@{/courses/{courseId}/vote(courseId=${course.getId()})}|" class="btn btn-block btn-outline-secondary mt-3" data-bs-toggle="modal" data-bs-target="#voteModal">Valuta il corso</a>
+                </th:block>
+            </aside>
+        </div>
+    </div>
+</section>
+<section class="course-lessons">
+<th:block th:if="${(isOwner==true && isTeacher==true) || (subscription==true && isStudent==true)}">
+    <br>
+    <h2>Lezioni</h2>
+    <br>
+    <th:block th:if="${(isOwner==true && isTeacher==true)}">
+           <a class ="btn btn-outline-primary btn-sm" th:href="|@{/lessons/new/{courseId}(courseId=${course.getId()})}|"><i class ="fas fa-plus" ></i > Crea nuova </a>
+    </th:block>
+    <th:block th:each="lessons : ${course.getLessons()}">
+        <hr />
+        <div class="row">
+        <div class="col-md-3 d-flex align-items-center">
+            <th:block th:if="${(isOwner==true && isTeacher==true) || (subscription==true && isStudent==true)}">
+                <a  th:href="|@{/lessons/{lessonId}/detail(lessonId=${lessons.getId()})}|" th:text="${lessons.getTitle()}"></a>
+            </th:block>
+            <th:block th:if="${!(isOwner==true && isTeacher==true) && (subscription==false && isStudent==false)}">
+                <th:block  th:text="${lessons.getTitle()}"></th:block>
+            </th:block>
+        </div>
+        <div class="col-md-7 d-flex align-items-center">
+            <span><th:block th:utext="${lessons.getDescription()}"></th:block></span>
+        </div>
+        <div class="col-md-2 d-flex align-items-center justify-content-end lesson-duration">
+            <i class="far fa-clock"></i><time><th:block th:text="${lessons.getDuration()}"></th:block></time>
+            <th:block th:if="${isOwner && isTeacher}">
+                <a class="btn btn-outline-primary btn-sm ml-3" th:href="|@{/lessons/{lessonId}/edit(lessonId=${lessons.getId()})}|"><i class="fas fa-pencil-alt"></i></a>
+            </th:block>
+        </div>
+        </div>
+        </th:block>
+        <br>
+        <br>
+        <div class="row course-duration">
+            <div class="col-md-9 d-flex align-items-center">
+                Totale
+            </div>
+            <div class="col-md-3 d-flex align-items-center justify-content-end">
+                <i class="far fa-clock"></i><time><th:block th:text="${totalDuration}"></th:block></time>
+            </div>
+        </div>
+</th:block>
+</section>
+<!-- Modal -->
+<div class="modal fade" id="voteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fs-5" id="exampleModalLabel">Esprimi la tua valutazione</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <iframe width="100%" height="100" frameBorder="0"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#voteModal').on('shown.bs.modal', function(event) {
+        $(this).find('iframe').attr('src', event.relatedTarget.href);
+    });
+</script>
+</body>
+</html>
+<div th:insert="~{footer :: footerFragment}"></div>

@@ -1,0 +1,33 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{header :: headerFragment}"></div>
+<br>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Dettaglio corso</title>
+    <div class="row">
+        <div class="col-md-12">
+            <th:block th:if="${!#strings.isEmpty(message)}">
+                <div class="alert alert-danger" role="alert">
+                    <th:block th:text="${message}"></th:block>
+                </div>
+            </th:block>
+        </div>
+    </div>
+</head>
+<body>
+<br>
+<h1 th:text="'Fai una domanda a ' + ${courses.getAuthor()} + ' docente di ' + ${courses.getTitle()}"></h1>
+<div class="row">
+    <div class="col-12">
+        <form method="POST" th:action="|/courses/${courseId}/description|">
+            <label>Fai una domanda</label>
+            <textarea name="description" id="description" class="form-control mb-3" rows="7"></textarea>
+            <button type="submit" class="btn btn-primary mt-3"><i class="far fa-paper-plane"></i> Invia domanda</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+<div th:insert="~{footer :: footerFragment}"></div>

@@ -1,0 +1,29 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      th:inline="text">
+<div th:insert="~{header :: headerFragment}"></div>
+<br>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Dettaglio lezione</title>
+</head>
+<body>
+<section class="lesson-info">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Dettaglio</h1>
+            <br>
+            <p>Durata stimata: <th:block th:text="${lesson.getDuration()}"></th:block></p>
+        </div>
+        <div class="col-md-12">
+            <th:block th:utext="${lesson.getDescription()}"></th:block>
+        </div>
+        <div class="col-md-12 mt-3">
+            <a th:href="|@{/courses/course/{courseId}/detail(courseId=${lesson.getCourse().getId()})}|"><i class="fas fa-arrow-left"></i> Torna al corso</a>
+        </div>
+    </div>
+</section>
+</body>
+</html>
+<div th:insert="~{footer :: footerFragment}"></div>

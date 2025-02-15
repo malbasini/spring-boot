@@ -1,0 +1,30 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      th:inline="text">
+<div th:insert="~{header :: headerFragment}"></div>
+<br>
+<head>
+    <title>Vota</title>
+</head>
+<body>
+<br>
+<form th:action="|@{/courses/{courseId}/vote(courseId=${courses.getId()})}|" method="post" class="text-center" target="_top">
+    <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+        <button name="vote" type="submit" class="border-0 bg-transparent mx-0 display-4 text-warning" th:value="${i}" th:onmouseover="|highlightVote(${i})|" th:onmouseout="resetVote()">
+            <i class="far fa-star"></i>
+        </button>
+    </th:block>
+</form>
+<script>
+  function highlightVote(vote) {
+    const buttons = $('button[name="vote"]');
+    buttons.slice(0, vote).find('i').addClass('fas').removeClass('far');
+    buttons.slice(vote).find('i').addClass('far').removeClass('fas');
+  }
+
+  function resetVote() {
+    highlightVote(1)
+  }
+  resetVote();
+</script>
+<div th:insert="~{footer :: footerFragment}"></div>
