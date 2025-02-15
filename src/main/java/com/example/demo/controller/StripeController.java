@@ -36,8 +36,8 @@ public class StripeController {
         session.setAttribute("courseId", courseId);
         BigDecimal amount = new BigDecimal(String.valueOf(course.getCurrentPriceAmount().doubleValue()));
         String currency = "EUR";
-        String successUrl = "http://localhost:8080/spring-mvc-demo/stripe/success";
-        String cancelUrl = "http://localhost:8080/spring-mvc-demo/stripe/cancel";
+        String successUrl = "http://localhost:8080/stripe/success";
+        String cancelUrl = "http://localhost:8080/stripe/cancel";
         try {
             String checkoutUrl = String.valueOf(stripeService.createCheckoutSession(userId, courseId, amount, currency, successUrl, cancelUrl
             ));
