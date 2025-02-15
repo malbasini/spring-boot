@@ -44,7 +44,7 @@ xmlns:th="http://www.thymeleaf.org">
                     </form>
                 </th:block>
                 <th:block th:if="${provider == 'stripe'}">
-                    <form th:action="|/stripe/${courseId}/checkout(courseId=${course.getId()})|" method="get">
+                    <form th:action="|@{/stripe/{courseId}/checkout(courseId=${course.getId()})}|" method="get">
                          <button type="submit" class="btn btn-warning btn-bloc">Iscriviti</button>
                     </form>
                 </th:block>
