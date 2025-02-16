@@ -9,8 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Crea nuovo corso</title>
     <div class="row">
-        <div class="col-md-4"></div>
-        <div class="col-md-4">
+        <div class="col-md-12">
             <th:block th:if="${!#strings.isEmpty(message1)}">
                 <div class="alert alert-success" role="alert">
                     <th:block th:text="${message1}"></th:block>
@@ -22,7 +21,6 @@
                 </div>
             </th:block>
         </div>
-        <div class="col-md-4"></div>
     </div>
 </head>
 <body>
@@ -65,7 +63,7 @@
                 <br>
                 <div class="form-group">
                     <label>Descrizione</label>
-                    <textarea name="description" id="description" th:text="${descrizione}" class="form-control" rows="18"></textarea>
+                    <textarea name="description" id="description" th:utext="${descrizione}" class="form-control" rows="18"></textarea>
                 </div>
             </div>
             <div class="col-md-3">
@@ -130,7 +128,7 @@
         </div>
     </div>
     <section>
-    <form method="post" th:action="|@{/courses/${course.getId()}/delete}|">
+    <form method="post" th:action="|@{/courses/{courseId}/delete(courseId=${course.getId()})}|">
         <input type="hidden" name="_csrf" value="${_csrf.token}" />
         <!-- Modal -->
         <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">

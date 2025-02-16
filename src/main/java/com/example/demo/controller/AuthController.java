@@ -38,6 +38,7 @@ public class AuthController {
     @RequestMapping(value = "/doLogin", method = RequestMethod.POST)
     public String doLogin(@ModelAttribute("userForm") Register userForm,
                           Model model) {
+        model.addAttribute("username",userForm.getUsername());
         boolean isAuthenticated;
         Register user = null;
         try {
@@ -74,16 +75,7 @@ public class AuthController {
             @RequestParam("roleId") String role,
             @RequestParam("g-recaptcha-response") String captchaResponse,
             Model model) {
-            boolean isCaptchaValid = captchaValidator.verifyCaptcha(captchaResponse);
-            if (!isCaptchaValid) {
-                model.addAttribute("error", "Captcha non valido. Riprova.");
-                model.addAttribute("username", username);
-                model.addAttribute("fullname", fullname);
-                model.addAttribute("email", email);
-                model.addAttribute("password", password);
-                model.addAttribute("role", role);
-                return "security/register";// Torna alla pagina del form
-            }
+            this.valorizzaCampi(model, username, fullname, email, password, role);
             if (fullname.isEmpty()) {
                 model.addAttribute("errore", "Valorizzare il fullname");
                 return "security/register";
@@ -104,6 +96,12 @@ public class AuthController {
                 model.addAttribute("errore", "Password non valida. La lunghezza deve essere di almeno cinque caratteri");
                 return "security/register";
             }
+            boolean isCaptchaValid = captchaValidator.verifyCaptcha(captchaResponse);
+            if (!isCaptchaValid) {
+                model.addAttribute("error", "Captcha non valido. Riprova.");
+                this.valorizzaCampi(model, username, fullname, email, password, role);
+                return "security/register";// Torna alla pagina del form
+            }
             Register user = new Register();
             user.setFullname(fullname);
             user.setEmail(email);
@@ -122,4 +120,12 @@ public class AuthController {
                 return "security/register";
             }
         }
+
+    private void valorizzaCampi(Model model, String username, String fullname, String email, String password, String role) {
+        model.addAttribute("username", username);
+        model.addAttribute("fullname", fullname);
+        model.addAttribute("email", email);
+        model.addAttribute("password", password);
+        model.addAttribute("role", role);
+    }
 }

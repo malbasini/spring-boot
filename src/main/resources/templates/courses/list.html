@@ -72,7 +72,12 @@
         <hr>
         <div class="row course">
             <div class="col-md-1">
-                <img th:src="|@{/images/}${corso.getImagePath()}|" th:title="|@{/images/}${corso.getImagePath()}|" width="52" height="52" />
+                <th:block th:if="${#strings.contains(corso.getImagePath(),'uploads')}">
+                    <img id="imagePath1" name="imagePath" th:src="${corso.getImagePath()}" th:title="|@{/images/}${corso.getImagePath()}|" alt="image" width="52" height="52" />
+                </th:block>
+                <th:block th:if="${!#strings.contains(corso.getImagePath(),'uploads')}">
+                    <img id="imagePath2" name="imagePath" th:src="|@{/images/}${corso.getImagePath()}|" th:title="|@{/images/}${corso.getImagePath()}|" alt="image" width="52" height="52"/>
+                </th:block>
             </div>
             <div class="col-md-5">
                 <h2><th:block th:text="${corso.getTitle()}"></th:block> </h2>

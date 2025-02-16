@@ -1,8 +1,5 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:c="https://jakarta.ee/xml/ns/jakartaee"
-      xmlns:form="http://www.w3.org/1999/xhtml">
+      xmlns:th="http://www.thymeleaf.org">
 <!-- Inclusione dell'header -->
 <div th:insert="~{header :: headerFragment}"></div>
 <head>
@@ -50,7 +47,7 @@
       <div class="col-md-4">
          <span class="input-group-text" id="inputGroup-sizing-sm">Username</span>
          <br>
-         <input path="username" type="text" id="username" name="username" class="form-control"/>
+         <input path="username" type="text" id="username" name="username" class="form-control" th:value="${userForm.username}"/>
       </div>
       <div class="col-md-4"></div>
     </div>

@@ -293,8 +293,7 @@ public class CourseController {
         String loggedUsername = principal.getName(); // es: "mariorossi"
         Subscription subscription = subscriptionRepository.findByCourse_Id(id);
         if(subscription != null) {
-            model.addAttribute("message","Corso acquistato, impossibile eliminarlo");
-            return "redirect:/courses/course/" + course.getId() + "/detail";
+            return "redirect:/courses/course/" + course.getId() + "/detail?" + "message=" + "Corso acquistato, impossibile eliminarlo";
         }
         // Verifico se il proprietario del corso è lo stesso che ha fatto login
         boolean isOwner = course.getUser().getUsername().equals(loggedUsername);

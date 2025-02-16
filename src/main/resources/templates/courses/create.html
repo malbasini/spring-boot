@@ -8,8 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Crea nuovo corso</title>
     <div class="row">
-        <div class="col-md-4"></div>
-        <div class="col-md-4">
+        <div class="col-md-12">
             <th:block th:if="${!#strings.isEmpty(message)}">
                 <div class="alert alert-success" role="alert">
                     <th:block th:text="${message}"></th:block>
@@ -21,7 +20,6 @@
                 </div>
             </th:block>
         </div>
-        <div class="col-md-4"></div>
     </div>
 </head>
 <body>
