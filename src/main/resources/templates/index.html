@@ -71,7 +71,7 @@
             <div class="row course">
                 <div class="col-md-1">
                     <th:block th:if="${#strings.contains(corso.getImagePath(),'uploads')}">
-                        <img id="imagePath1" name="imagePath" th:src="${course.getImagePath()}" th:title="|@{/images/}${corso.getImagePath()}|" alt="image" width="52" height="52" />
+                        <img id="imagePath1" name="imagePath" th:src="${corso.getImagePath()}" th:title="|@{/images/}${corso.getImagePath()}|" alt="image" width="52" height="52" />
                     </th:block>
                     <th:block th:if="${!#strings.contains(corso.getImagePath(),'uploads')}">
                         <img id="imagePath2" name="imagePath" th:src="|@{/images/}${corso.getImagePath()}|" th:title="|@{/images/}${corso.getImagePath()}|" alt="image" width="52" height="52"/>
