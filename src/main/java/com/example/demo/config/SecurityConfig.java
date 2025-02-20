@@ -14,7 +14,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import javax.sql.DataSource;
+
 
 @Configuration
 @EnableWebSecurity
@@ -24,7 +29,7 @@ public class SecurityConfig {
     private CustomUserDetailsService customUserDetailsService;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, PersistentTokenRepository persistentTokenRepository) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers
@@ -48,7 +53,14 @@ public class SecurityConfig {
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll()
-                );
+                )
+                // Configurazione rememberMe
+                .rememberMe(rememberMe -> rememberMe
+                         .rememberMeParameter("remember-me")  // Nome del parametro checkbox
+                        .tokenValiditySeconds(2 * 24 * 60 * 60) // 2 giorni in secondi (172.800)
+                         .key("mykey")
+                        .tokenRepository(persistentTokenRepository)
+        );
 
         return http.build();
     }
@@ -65,6 +77,15 @@ public class SecurityConfig {
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+
+    @Bean
+    public PersistentTokenRepository persistentTokenRepository(DataSource dataSource) {
+        JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
+        jdbcTokenRepository.setDataSource((javax.sql.DataSource) dataSource);
+        //jdbcTokenRepository.setCreateTableOnStartup(true); // Da usare solo la prima volta
+        return jdbcTokenRepository;
     }
 }
 
