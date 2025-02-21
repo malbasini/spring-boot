@@ -254,6 +254,23 @@ IF NEW.vote <> OLD.vote THEN
     END IF;
 END */;;
 DELIMITER ;
+
+
+DROP TABLE IF EXISTS `persistent_logins`;
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+
+create table persistent_logins
+(
+    username  varchar(64) not null,
+    series    varchar(64) not null
+        primary key,
+    token     varchar(64) not null,
+    last_used timestamp   not null
+)
+    engine = InnoDB;
+
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
@@ -267,5 +284,21 @@ DELIMITER ;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 -- Dump completed on 2025-02-15  7:47:44
