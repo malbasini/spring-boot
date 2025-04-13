@@ -38,16 +38,17 @@ xmlns:th="http://www.thymeleaf.org">
             </th:block>&nbsp;
             <br>
             <th:block th:if="${((isStudent==true) && (subscription==false))}">
-                <th:block th:if="${provider == 'paypal'}">
-                    <form  th:action="|@{/paypal/{courseId}/pay(courseId=${course.getId()})}|" method="get">
-                        <button type="submit" class="btn btn-warning btn-bloc">Iscriviti</button>
-                    </form>
-                </th:block>
-                <th:block th:if="${provider == 'stripe'}">
-                    <form th:action="|@{/stripe/{courseId}/checkout(courseId=${course.getId()})}|" method="get">
-                         <button type="submit" class="btn btn-warning btn-bloc">Iscriviti</button>
-                    </form>
-                </th:block>
+                <form th:action="|@{/payment/paypal/{courseId}/pay(courseId=${course.getId()})}|" method="POST">
+                    <button type="submit">
+                        Paga con PayPal
+                    </button>
+                </form>
+                <!-- Rotta per Stripe -->
+                <form th:action="|@{/payment/stripe/{courseId}/pay(courseId=${course.getId()})}|" method="POST">
+                    <button type="submit">
+                        Paga con Stripe
+                    </button>
+                </form>
             </th:block>&nbsp;
             <br>
         </div>

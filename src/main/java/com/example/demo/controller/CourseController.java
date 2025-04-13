@@ -185,8 +185,6 @@ public class CourseController {
         model.addAttribute("course", course);
         model.addAttribute("totalDuration", formatDuration(totalDuration));
         //ricavo se il provider dei pagamenti è paypal o stripe
-        String pymentProvider = subscriptionService.getPaymentType();
-        model.addAttribute("provider", pymentProvider);
         return "courses/detail"; // JSP da mostrare
 
     }
