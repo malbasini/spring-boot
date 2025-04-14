@@ -17,7 +17,6 @@ public interface SubscriptionService {
             String transactionId,
             int vote);
     void subscriptionVote(int subscriptionId, int vote);
-    String getPaymentType();
 
     void save(Subscription subscription);
 }

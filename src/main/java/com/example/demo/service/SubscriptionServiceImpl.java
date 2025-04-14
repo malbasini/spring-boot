@@ -40,10 +40,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
     }
 
-    public String getPaymentType() {
-        return paymentConfig.getType();
-    }
-
     @Override
     public void save(Subscription subscription) {
         subscriptionRepository.save(subscription);
@@ -76,7 +72,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         subscription.setPaymentDate(LocalDateTime.ofInstant(new Date().toInstant(), ZoneId.systemDefault()));
         subscription.setPaidAmount(amount);
         subscription.setPaidCurrency(currency);
-        subscription.setPaymentType(getPaymentType());
+        subscription.setPaymentType(paymentType);
         subscription.setTransactionId(transactionId);
         subscription.setVote(vote);
         Subscription s = subscriptionRepository.save(subscription);

@@ -22,7 +22,7 @@ public class StripeController {
         System.out.println("StripeController registered!");
     }
 
-    @PostMapping("/{courseId}/pay")
+    @GetMapping("/{courseId}/pay")
     public String payWithStripe(@PathVariable("courseId") Integer courseId,
                                 Principal principal,
                                 Model model,

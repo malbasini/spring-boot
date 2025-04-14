@@ -16,7 +16,7 @@ import java.security.Principal;
         @Autowired
         private CommonPayService commonPayService;
 
-        @PostMapping("/{courseId}/pay")
+        @GetMapping("/{courseId}/pay")
         public String payWithPayPal(@PathVariable("courseId") Integer courseId,
                                     Principal principal,
                                     Model model,

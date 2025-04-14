@@ -32,27 +32,26 @@ xmlns:th="http://www.thymeleaf.org">
     <div class="row">
         <div class="col-md-9">
         </div>
-        <div class="col-md-3 d-flex align-items-center">
+        <div class="col-md-3">
             <th:block th:if="${isOwner==true && isTeacher==true}">
                 <a class="btn btn-primary btn-block" th:href="|@{/courses/{courseId}/edit(courseId=${course.getId()})}|">Modifica</a>&nbsp;&nbsp;&nbsp;
-            </th:block>&nbsp;
+            </th:block>
             <br>
             <th:block th:if="${((isStudent==true) && (subscription==false))}">
-                <form th:action="|@{/payment/paypal/{courseId}/pay(courseId=${course.getId()})}|" method="POST">
-                    <button type="submit">
-                        Paga con PayPal
-                    </button>
-                </form>
-                <!-- Rotta per Stripe -->
-                <form th:action="|@{/payment/stripe/{courseId}/pay(courseId=${course.getId()})}|" method="POST">
-                    <button type="submit">
-                        Paga con Stripe
-                    </button>
-                </form>
-            </th:block>&nbsp;
-            <br>
+            <div class="dropdown">
+                <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Iscriviti
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" th:href="|@{/payment/paypal/{courseId}/pay(courseId=${course.getId()})}|">Paypal</a></li>
+                    <li><a class="dropdown-item" th:href="|@{/payment/stripe/{courseId}/pay(courseId=${course.getId()})}|">Stripe</a></li>
+                </ul>
+            </div>
+          </th:block>
         </div>
     </div>
+    <br>
+    <br>
     <div class="row">
         <div class="col-md-9">
             <th:block th:utext="${course.getDescription()}"></th:block>
@@ -152,6 +151,8 @@ xmlns:th="http://www.thymeleaf.org">
         $(this).find('iframe').attr('src', event.relatedTarget.href);
     });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
 </body>
 </html>
 <div th:insert="~{footer :: footerFragment}"></div>
