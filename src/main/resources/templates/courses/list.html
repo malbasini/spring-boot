@@ -5,6 +5,16 @@
       xmlns:form="http://www.w3.org/1999/xhtml">
 <!-- Inclusione dell'header -->
 <div th:insert="~{header :: headerFragment}"></div>
+<br>
+<div class="row">
+    <div class="col-md-12">
+        <th:block th:if="${!#strings.isEmpty(message)}">
+            <div class="alert alert-success" role="alert">
+                <th:block th:text="${message}"></th:block>
+            </div>
+        </th:block>
+    </div>
+</div>
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />

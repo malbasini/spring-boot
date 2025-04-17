@@ -61,6 +61,7 @@ public class CourseController {
             @RequestParam(defaultValue = "") String title, // Filtro per titolo
             @RequestParam(defaultValue = "title") String sortBy, // Campo di ordinamento
             @RequestParam(defaultValue = "asc") String sortDirection,
+            @RequestParam(name = "message",required = false) String message,
             Principal principal,
             Model model) {
 
@@ -80,7 +81,7 @@ public class CourseController {
         model.addAttribute("titleFilter", title);
         model.addAttribute("sortBy", sortBy);
         model.addAttribute("sortDirection", sortDirection);
-
+        model.addAttribute("message", message);
         return "courses/list"; // Nome della vista JSP
     }
 
@@ -281,7 +282,7 @@ public class CourseController {
             model.addAttribute("message", e.getMessage());
             return "redirect:/courses/" + updatedCourse.getId() + "/edit"; // JSP da mostrare
         }
-        return "redirect:/courses";
+        return "redirect:/courses?message=" + "Course updated successfully";
 }
     // POST /courses/{id}/delete -> cancella un corso
     @PostMapping("/{id}/delete")
@@ -301,7 +302,7 @@ public class CourseController {
             return "redirect:security/access-denied";
         }
         courseService.delete(id);
-        return "redirect:/courses";
+        return "redirect:/courses?message=" + "Course deleted successfully";
     }
     @GetMapping("/{idCourse}/vote")
     public String vote(@PathVariable("idCourse") Integer idCourse,Principal principal, Model model) {
@@ -402,7 +403,7 @@ public class CourseController {
         String message = validazioni(course,model);
         if(message != null) {
             model.addAttribute("message", message);
-            return "redirect:/courses/" + id + "/edit";
+            return "redirect:/courses/" + id + "/edit?message=" + message;
         }
         try {
             // Creare la directory di upload se non esiste
@@ -436,6 +437,11 @@ public class CourseController {
     }
     public String validazioni(Course course, Model model)
     {
+        if(course.getDescription()==null || course.getDescription().isEmpty())
+        {
+            model.addAttribute("message", "Salvare i dati prima di fare l'upload dell'immagine");
+            return "Salvare i dati prima di fare l'upload dell'immagine";
+        }
         String cleanedText = "";
         if(course.getDescription()!=null || !course.getDescription().isEmpty()) {
             cleanedText = course.getDescription().replaceAll("<[^>]*>", " ").trim();
