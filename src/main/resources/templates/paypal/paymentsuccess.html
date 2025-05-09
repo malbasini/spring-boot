@@ -4,16 +4,17 @@
 <div th:insert="~{base :: headerFragment}"></div>
 <br>
 <head>
-    <br>
-    <div class="alert alert-info" role="alert">
-        Pagamento avvenuto con successo!
-    </div>
-    <br>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Successo</title>
 </head>
 <body>
 <br>
-<a href="/scadenze/list">Torna alla lista</a>
+  <div class="alert alert-info" role="alert">
+      Pagamento avvenuto con successo. Grazie per aver acquistato il corso!
+  </div>
 <br>
-</body>
-</html>
+<div class="col-md-12 mt-3">
+    <a th:href="@{/courses/course/{id}/detail(id=${subscription.getCourse().getId()})}"><i class="fas fa-arrow-left"></i> Torna al corso che hai acquistato</a>
+</div>
 <div th:insert="~{footer :: footerFragment}"></div>

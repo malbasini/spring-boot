@@ -46,8 +46,8 @@ public class CommonPayService {
         BigDecimal amount = course.getCurrentPriceAmount();
         String currency = "EUR";
         String description = course.getTitle();
-        String successUrl = "http://localhost:8080/spring-mvc-demo/payment/paypal/success";
-        String cancelUrl = "http://localhost:8080/spring-mvc-demo/payment/paypal/cancel";
+        String successUrl = "http://localhost:8080/payment/paypal/success";
+        String cancelUrl = "http://localhost:8080/payment/paypal/cancel";
         try {
             String approvalLink = payPalService.createPayment(
                     user,
@@ -106,8 +106,8 @@ public class CommonPayService {
         session.setAttribute("courseId", courseId);
         BigDecimal amount = new BigDecimal(String.valueOf(course.getCurrentPriceAmount().doubleValue()));
         String currency = "EUR";
-        String successUrl = "http://localhost:8080/spring-mvc-demo/payment/stripe/success";
-        String cancelUrl = "http://localhost:8080/spring-mvc-demo/payment/stripe/cancel";
+        String successUrl = "http://localhost:8080/payment/stripe/success";
+        String cancelUrl = "http://localhost:8080/payment/stripe/cancel";
         try {
             String checkoutUrl = String.valueOf(stripeService.createCheckoutSession(userId, courseId, amount, currency, successUrl, cancelUrl
             ));

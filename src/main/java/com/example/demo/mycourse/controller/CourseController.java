@@ -146,6 +146,7 @@ public class CourseController {
         }
         boolean isTeacher = false;
         boolean isStudent = false;
+        boolean subscription = false;
         // L'utente loggato
         String loggedUsername = principal.getName();
         User user = userRepository.findByUsername(loggedUsername);
@@ -153,9 +154,13 @@ public class CourseController {
             course.setUserOwner(user);// es: "mariorossi"
             isStudent = true;
             model.addAttribute("isStudent",isStudent);
-            Subscription subscription = subscriptionRepository.findByCourse_Id(course.getId());
-            if(subscription != null) {
-                model.addAttribute("subscription", true);
+            Subscription subscriptions = subscriptionRepository.findByCourse_Id(course.getId());
+            if(subscriptions != null) {
+                subscription = true;
+                model.addAttribute("subscription", subscription);
+            }
+            else {
+                model.addAttribute("subscription", subscription);
             }
         }
         if(course.getUserOwner()==null)
@@ -168,6 +173,8 @@ public class CourseController {
         boolean isOwner = (course.getUserOwner().getUsername().equals(loggedUsername) && isTeacher);
         model.addAttribute("isOwner", isOwner);
         model.addAttribute("isStudent", isStudent);
+        model.addAttribute("isTeacher", isTeacher);
+        model.addAttribute("subscription",subscription);
         model.addAttribute("message", message);
         // Calcola la durata totale
         Duration totalDuration = calculateTotalDuration(course.getLessons());
@@ -250,8 +257,14 @@ public class CourseController {
             return "redirect:/courses/" + updatedCourse.getId() + "/edit"; // JSP da mostrare
         }
         String imagePath = courseService.findById(id).getImagePath();
+        BigDecimal rating = courseService.findById(id).getRating();
+        String image = courseService.findById(id).getImagePath();
+        updatedCourse.setRating(rating);
+        updatedCourse.setImagePath(image);
          // Assicuriamoci che l'ID coincida
         updatedCourse.setId(id);
+        updatedCourse.setCurrentPriceCurrency("EUR");
+        updatedCourse.setFullPriceCurrency("EUR");
         try{
             courseService.updateCourse(updatedCourse);
             String message = validazioni(updatedCourse,model);

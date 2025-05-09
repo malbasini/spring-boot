@@ -32,8 +32,7 @@
 </div>
 <br>
 <section class="course-info">
-    <form method="post" th:action="|@{/courses/{id}/{iduser}(id=${course.getId()},iduser=${iduser})}|">
-        <input type="hidden" name="_csrf" value="${_csrf.token}" />
+    <form method="post" th:action="@{/courses/{id}/{iduser}(id=${course.getId()},iduser=${iduser})}">
         <div class="row">
             <div class="col-md-9">
                 <h1>Aggiorna Corso</h1>
