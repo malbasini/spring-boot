@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:inline="text">
+<!-- Inclusione dell'header -->
+<div th:insert="base :: headerFragment"></div>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Registrati</title>
+    <br>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <th:block th:if="${!#strings.isEmpty(errore)}">
+                <div class="alert alert-danger" role="alert">
+                    <th:block th:text="${errore}"></th:block>
+                </div>
+            </th:block>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <th:block th:if="${!#strings.isEmpty(message)}">
+                <div class="alert alert-success" role="alert">
+                    <th:block th:text="${message}"></th:block>
+                </div>
+            </th:block>
+            <th:block th:if="${!#strings.isEmpty(error)}">
+                <div class="alert alert-danger" role="alert">
+                    <th:block th:text="${error}"></th:block>
+                </div>
+            </th:block>
+        </div>
+        <div class="col-md-4"></div>
+    </div>
+</head>
+<body>
+<br>
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <h2>Registrati</h2>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+<br>
+<section class="course-info">
+  <form th:action="@{/doRegister}" method="post">
+      <div class="row">
+          <div class="col-md-4"></div>
+          <div class="col-md-4">
+              <span class="input-group-text" id="inputGroup-sizing-sm1">Username</span>
+              <br>
+              <input type="text" class="form-control" placeholder="Username" th:value="${username}" name="username" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+          </div>
+          <div class="col-md-4"></div>
+      </div>
+      <br>
+      <div class="row">
+          <div class="col-md-4"></div>
+          <div class="col-md-4">
+              <span class="input-group-text" id="inputGroup-sizing-sm2">Nome Completo</span>
+              <br>
+              <input type="text" class="form-control" placeholder="Full name" th:value="${fullname}" name="fullname" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+          </div>
+          <div class="col-md-4"></div>
+      </div>
+      <br>
+      <div class="row">
+          <div class="col-md-4"></div>
+          <div class="col-md-4">
+              <span class="input-group-text" id="inputGroup-sizing-sm3">Password</span>
+              <br>
+              <input type="password" class="form-control" th:value="${password}" placeholder="Password" name="password" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+          </div>
+          <div class="col-md-4"></div>
+      </div>
+      <br>
+      <div class="row">
+          <div class="col-md-4"></div>
+          <div class="col-md-4">
+              <span class="input-group-text" id="inputGroup-sizing-sm4">Email</span>
+              <br>
+              <input type="email" class="form-control" th:value="${email}" placeholder="Email" name="email" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+          </div>
+          <div class="col-md-4"></div>
+      </div>
+      <br>
+      <div class="row">
+          <div class="col-md-4"></div>
+          <div class="col-md-4">
+              <span class="input-group-text" id="inputGroup-sizing-sm5">Ruolo</span>
+              <br>
+              <select class="form-select form-select-sm" name="roleId" aria-label="Small select example">
+                  <option value="selected Open this select menu"></option>
+                  <option value="ADMIN">ROLE_ADMIN</option>
+                  <option value="USER">ROLE_USER</option>
+              </select>
+          </div>
+          <div class="col-md-4"></div>
+      </div>
+      <br>
+      <div class="row">
+          <div class="col-md-4"></div>
+          <div class="col-md-8">
+              <div class="g-recaptcha col-sm-5" th:attr="data-sitekey=${@captchaSettings.getSite()}"></div>
+          </div>
+      </div>
+      <br>
+      <div class="row">
+          <div class="col-md-4"></div>
+          <div class="col-md-4">
+              <br>
+              <button type="submit"  class="btn btn-primary">Registrati</button>
+          </div>
+          <div class="col-md-4"></div>
+      </div>
+  </form>
+</section>
+</body>
+</html>
+<div th:insert="~{footer :: footerFragment}"></div>
+
+

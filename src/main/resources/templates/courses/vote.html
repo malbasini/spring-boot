@@ -1,0 +1,36 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:c="https://jakarta.ee/xml/ns/jakartaee">
+<!-- Inclusione dell'header -->
+<div th:insert="base :: headerFragment"></div>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Home Page</title>
+</head>
+<body>
+<form th:action="@{/courses/{id}/vote(id=${courses.getId()})}" method="post" class="text-center" target="_top">
+    <th:block th:each="i : ${#numbers.sequence(0, 5)}">
+        <button name="vote" id="vote" type="submit" class="border-0 bg-transparent mx-0 display-4 text-warning" value="${i}" onmouseover="highlightVote(${i})" onmouseout="resetVote()">
+            <th:block th:unless="actionValue" th:value="${i}" />
+            <i class="far fa-star"></i>
+        </button>
+    </th:block>
+</form>
+<script>
+  function highlightVote(vote) {
+    const buttons = $('button[name="vote"]');
+    buttons.slice(0, vote).find('i').addClass('fas').removeClass('far');
+    buttons.slice(vote).find('i').addClass('far').removeClass('fas');
+  }
+
+  function resetVote() {
+    highlightVote(${vote});
+  }
+  resetVote();
+</script>
+}
+</body>
+<div th:insert="footer :: footerFragment"></div>
+</html>
