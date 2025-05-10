@@ -333,16 +333,23 @@ public class CourseController {
         return "redirect:/courses/course/" + course.getId() + "/detail";
     }
     @PostMapping("/{courseId}/sendquestion")
-    public String postQuestion(@PathVariable("courseId") Integer courseId,
-                               @RequestParam("question") String question,
-                               Principal principal,
-                               Model model) {
+    public String postQuestion( @RequestParam("g-recaptcha-response") String captchaResponse,
+                                @PathVariable("courseId") Integer courseId,
+                                @RequestParam("question") String question,
+                                Principal principal,
+                                Model model) {
         Course course = courseService.findById(courseId);
         String email = courseService.getEmailByCourseIdAndAuthor(courseId,course.getAuthor());
-        if(question.isEmpty() || question.equals(null)) {
-            model.addAttribute("message","Domanda obbligatoria");
+        if(question.isEmpty() || question == null) {
+            model.addAttribute("error","Domanda obbligatoria");
             model.addAttribute("courses",course);
             return "courses/question";
+        }
+        boolean isCaptchaValid = captchaValidator.verifyCaptcha(captchaResponse);
+        if (!isCaptchaValid) {
+            model.addAttribute("error", "Captcha non valido. Riprova.");
+            model.addAttribute("courses", course);
+            return "courses/question";// Torna alla pagina del form
         }
         String loggedUsername = principal.getName(); // es: "mariorossi"
         User user = courseService.findByUsername(loggedUsername);
