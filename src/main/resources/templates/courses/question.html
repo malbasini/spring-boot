@@ -22,10 +22,10 @@
     </div>
 </div>
 <br>
-<h1>Fai una domanda a <th:block th:text="${courses.getAuthor()} docente di ${courses.getTitle()}"></th:block></h1>
+<h1>Fai una domanda a <th:block th:text="${courses.getAuthor()} + ' docente di ' + ${courses.getTitle()}"></th:block></h1>
 <div class="row">
     <div class="col-12">
-        <form method="POST" th:action="@{/courses/{id}/sendquestion(id=${courses.getAuthor()})}">
+        <form method="POST" th:action="@{/courses/{id}/sendquestion(id=${courses.getId()})}">
             <label>Fai una domanda</label>
             <textarea name="question" class="form-control mb-3" rows="10"></textarea>
             <button type="submit" class="btn btn-primary mt-3"><i class="far fa-paper-plane"></i> Invia domanda</button>

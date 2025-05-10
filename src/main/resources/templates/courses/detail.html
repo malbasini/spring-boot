@@ -88,6 +88,11 @@
                 <th:block th:if="${!#strings.contains(course.getImagePath(), 'uploads')}">
                     <img name="imagePath" th:src="@{/static/images/{imagePath}(imagePath=${course.getImagePath()})}" alt="image" class="img-fluid course-image">
                 </th:block>
+                <br>
+                <th:block th:if="${subscription && isStudent}">
+                    <a th:href="@{/courses/{id}/question(id=${course.getId()})}" class="btn btn-block btn-outline-secondary mt-3">Fai una domanda</a>
+                    <a th:href="@{/courses/{id}/vote(id=${course.getId()})}" class="btn btn-block btn-outline-secondary mt-3" data-bs-toggle="modal" data-bs-target="#voteModal">Valuta il corso</a>
+                </th:block>
             </aside>
         </div>
     </div>

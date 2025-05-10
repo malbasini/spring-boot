@@ -11,8 +11,8 @@
 </head>
 <body>
 <form th:action="@{/courses/{id}/vote(id=${courses.getId()})}" method="post" class="text-center" target="_top">
-    <th:block th:each="i : ${#numbers.sequence(0, 5)}">
-        <button name="vote" id="vote" type="submit" class="border-0 bg-transparent mx-0 display-4 text-warning" value="${i}" onmouseover="highlightVote(${i})" onmouseout="resetVote()">
+    <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+        <button name="vote" id="vote" type="submit" class="border-0 bg-transparent mx-0 display-4 text-warning" th:value="${i}" th:onmouseover="highlightVote(${i})" onmouseout="resetVote()">
             <th:block th:unless="actionValue" th:value="${i}" />
             <i class="far fa-star"></i>
         </button>
@@ -26,7 +26,7 @@
   }
 
   function resetVote() {
-    highlightVote(${vote});
+    /*[[${vote}]]*/ highlightVote(0)
   }
   resetVote();
 </script>

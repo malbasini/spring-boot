@@ -90,7 +90,7 @@ public class CourseController {
     @GetMapping("/new")
     @PreAuthorize("hasAuthority('ROLE_TEACHER')")
     public String showCreateForm(Model model) {
-        model.addAttribute("sitetkey", captchaValidator.getSiteKey());
+        model.addAttribute("description","At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.");
         model.addAttribute("course", new Course());
         return "courses/create"; // JSP da mostrare
     }
@@ -107,6 +107,10 @@ public class CourseController {
         User user = courseService.findByUsername(username);
         // Imposta l'utente proprietario
         course.setUserOwner(user);
+        course.setCurrentPriceCurrency("EUR");
+        course.setFullPriceCurrency("EUR");
+        course.setRating(BigDecimal.valueOf(1.0));
+        course.setImagePath("default.png");
 
         boolean isCaptchaValid = captchaValidator.verifyCaptcha(captchaResponse);
         if (!isCaptchaValid) {
@@ -132,7 +136,7 @@ public class CourseController {
             return "courses/create";
         }
         model.addAttribute("message1", "Inserimento corso avvenuto con successo. Ora inserisci gli altri dati");
-        return "redirect:/courses/" + course.getId() + "/edit"; // JSP da mostrare
+        return "redirect:/courses/" + course.getId() + "/edit?message1=Inserimento corso avvenuto con successo. Ora inserisci gli altri dati!"; // JSP da mostrare
 
     }
     @GetMapping(value = "/course/{id}/detail")
@@ -325,7 +329,7 @@ public class CourseController {
             try {
                 subscriptionService.subscriptionVote(subscription.getId(), vote);
                 model.addAttribute("message", "Grazie per aver espresso la tua opinione sul corso");
-                return "redirect:/courses/course/" + course.getId() + "/detail";
+                return "redirect:/courses/course/" + course.getId() + "/detail?message=Grazie per aver espresso la tua opinione sul corso!";
             }
             catch (Exception e) {
                 model.addAttribute("message", e.getMessage());
@@ -373,7 +377,7 @@ public class CourseController {
                 return "redirect:/courses/course/" + course.getId() + "/detail";
             }
             model.addAttribute("message","Domanda inviata con successo");
-            return "redirect:/courses/course/" + course.getId() + "/detail";
+            return "redirect:/courses/course/" + course.getId() + "/detail?message=Domanda inviata con successo!";
         }
         return "redirect:/courses/course/" + course.getId() + "/detail";
     }
