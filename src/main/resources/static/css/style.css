@@ -23,13 +23,14 @@ h1 {
 }
 .current-price {
     color: black; /* Verde */
+    font-size: 1em;
     margin-bottom: 2px; /* Riduce lo spazio sotto il prezzo corrente */
 }
 
 .full-price {
     text-decoration: line-through; /* Barrato */
     color: gray;
-    font-size: 0.9em; /* Riduzione font per differenziarlo */
+    font-size: 1em; /* Riduzione font per differenziarlo */
     margin-top: 2px; /* Riduce lo spazio sopra il prezzo pieno */
 }
 .course h2 {

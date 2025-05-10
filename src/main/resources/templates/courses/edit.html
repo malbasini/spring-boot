@@ -9,7 +9,6 @@
     <title>Modifica</title>
 </head>
 <body onload="image(false)">
-<!-- Alert Condizionale -->
 <br>
 <!-- Alert Condizionale -->
 <div class="row">
@@ -37,8 +36,7 @@
             <div class="col-md-9">
                 <h1>Aggiorna Corso</h1>
             </div>
-            <th:block th:if="${isOwner && isTeacher}">
-                <!-- Qui dentro verrà mostrato solo se l'utente loggato ha 'ROLE_TEACHER' -->
+            <th:block th:if="${canEdit}">
                 <div class="col-md-3 d-flex align-items-center">
                     <button type="submit" class="btn btn-primary btn-lg btn-block">Salva</button>&nbsp;&nbsp;&nbsp;&nbsp;
                     <button class="btn btn-danger btn-lg btn-block" type="button"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">Elimina</button>
@@ -113,7 +111,7 @@
         <div class="col-md-3 form-group">
             <form th:action="|@{/courses/{id}/uploadImage(id=${course.getId()})}|" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="_csrf" value="${_csrf.token}" />
-                    <th:block th:if="${isOwner && isTeacher}">
+                    <th:block th:if="${canEdit}">
                         <div class="form-group">
                             <div class="form-group">
                                 <input type="file" id="imageFile" name="imageFile" class="btn btn-success" th:src="@{${course.getImagePath()}}" onchange="updatePreview(this)" />

@@ -40,7 +40,6 @@ public class LessonController {
         lesson.setCourse(course);
         model.addAttribute("lesson", lesson);
         model.addAttribute("courseId", courseId);
-        model.addAttribute("sitetkey", captchaValidator.getSiteKey());
         return "lessons/create";
     }
     // POST /lessons -> creazione (salvataggio) della lezione
@@ -56,15 +55,15 @@ public class LessonController {
         boolean isCaptchaValid = captchaValidator.verifyCaptcha(captchaResponse);
         if (!isCaptchaValid) {
             model.addAttribute("error", "Captcha non valido. Riprova.");
-            model.addAttribute("sitetkey", captchaValidator.getSiteKey());
             model.addAttribute("lesson", lesson);
             return "lessons/create";// Torna alla pagina del form
         }
-        model.addAttribute("sitetkey", captchaValidator.getSiteKey());
         if(lesson.getTitle().isEmpty()|| lesson.getTitle() == null) {
             model.addAttribute("message", "Il Titolo è obbligatorio");
             return "lessons/create"; // JSP da mostrare
         }
+        lesson.setDuration("00:00:00");
+        lesson.setDescription("At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio.");
         try {
             lessonService.save(lesson);
         }
@@ -78,14 +77,17 @@ public class LessonController {
         }
         Lesson l = lessonService.findByTitleAndCourseId(lesson.getTitle(), courseId);
         model.addAttribute("lesson", l);
-        return "/lessons/edit";
+          return "redirect:/lessons/" + lesson.getId() + "/edit?message1=Inserimento lezione avvenuto con successo. Ora inserisci gli altri dati!";
     }
     // GET /lessons/{id}/edit -> mostra form di modifica
     @GetMapping("/{id}/edit")
-    public String editLesson(@PathVariable("id") Integer id, Model model) {
+    public String editLesson(@PathVariable("id") Integer id,
+                             @RequestParam(name = "message1",required = false) String message1,
+                             Model model) {
         Lesson lesson = lessonService.findById(id);
         if (!lesson.equals(null)) {
             model.addAttribute("lesson", lesson);
+            model.addAttribute("message1", message1);
             // gestisci errore se non trovato
             return "/lessons/edit"; // JSP da mostrare";
 
@@ -118,16 +120,16 @@ public class LessonController {
             // Non dimenticare di reimpostare il course!
             existing.setCourse(updatedLesson.getCourse());
             lessonService.updateLesson(existing);
-            return "redirect:/courses?message=Lesson updated successfully";
+            return "redirect:/courses?message=Lezione aggiornata correttamente!";
         }
     }
         // POST /lessons/{id}/delete -> cancellazione
         @PostMapping("/{id}/delete")
         public String deleteLesson(@PathVariable("id") Integer id) {
             Lesson lesson = lessonService.findById(id);
-            if (!lesson.equals(null)) {
+            if (lesson != null) {
                 lessonService.deleteLesson(id);
-                return "redirect:/courses";
+                return "redirect:/courses?message=Lezione cancellata correttamente!";
             }
             return "redirect:/courses";
         }

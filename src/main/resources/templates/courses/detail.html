@@ -29,16 +29,16 @@
         </div>
         <br>
                 <div class="col-md-3">
-                <th:block th:if="${isStudent or isOwner}">
+                <th:block th:if="${isStudent or canEdit}">
                     <aside>
                     <br>
-                    <th:block th:if="${isOwner && isTeacher}">
+                    <th:block th:if="${canEdit==true}">
                         <a class="btn btn-warning outline" th:href="@{/courses/{id}/edit(id=${course.getId()})}">Modifica</a>&nbsp;&nbsp;&nbsp;
                     </th:block>&nbsp;
-                    <th:block th:if="${subscription}">
+                    <th:block th:if="${subscription==true}">
                           <span class="alert alert-secondary btn-block">Sei iscritto al corso</span>
                     </th:block>
-                    <th:block th:if="${isOwner}">
+                    <th:block th:if="${canEdit && not subscription}">
                         <span class="alert alert-secondary btn-block">Sei l'autore del corso</span>
                      </th:block>
                     <th:block th:if="${isStudent && not subscription}">
@@ -98,19 +98,19 @@
     </div>
 </section>
 <section class="course-lessons">
-    <th:block th:if="${(isOwner && isTeacher) || (subscription && isStudent)}">
+    <th:block th:if="${(canEdit) || subscription}">
             <h2>Lezioni</h2>
-            <th:block th:if="${(isOwner && isTeacher)}">
+            <th:block th:if="${(canEdit)}">
                    <a class ="btn btn-outline-primary btn-sm" th:href="@{/lessons/new/{id}(id=${course.getId()})}"><i class ="fas fa-plus" ></i > Crea nuova </a>
             </th:block>
             <th:block th:each="lesson: ${course.lessons}">
             <hr />
                 <div class="row">
                     <div class="col-md-3 d-flex align-items-center">
-                        <th:block th:if="${(isOwner && isTeacher) || (subscription && isStudent)}">
+                        <th:block th:if="${(canEdit) || (subscription)}">
                               <a th:href="@{/lessons/{id}/detail(id=${lesson.getId()})}"><th:block th:text="${lesson.getTitle()}"></th:block></a>
                         </th:block>
-                        <th:block th:if="${not (isOwner && isTeacher) && not (subscription && isStudent)}">
+                        <th:block th:if="${not (canEdit) && not (subscription && isStudent)}">
                             <th:block th:text="${lesson.getTitle()}"></th:block>
                         </th:block>
                     </div>
@@ -119,7 +119,7 @@
                     </div>
                     <div class="col-md-2 d-flex align-items-center justify-content-end lesson-duration">
                         <i class="far fa-clock"></i><time><th:block th:text="${lesson.getDuration()}"></th:block></time>
-                        <th:block th:if="${isOwner && isTeacher}">
+                        <th:block th:if="${canEdit}">
                             <a class="btn btn-outline-primary btn-sm ml-3" th:href="@{/lessons/{id}/edit(id=${lesson.getId()})}"><i class="fas fa-pencil-alt"></i></a>
                         </th:block>
                     </div>

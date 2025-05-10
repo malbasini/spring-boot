@@ -44,7 +44,7 @@
 <div class="row">
     <div class="col-md-1"></div>
     <div class="col-md-5">
-        <a th:href="|page=${currentPage}&size=10&title=${titleFilter}&sortBy=title&sortDirection=${sortBy == 'title' && sortDirection == 'asc' ? 'desc' : 'asc'}|">
+        <a th:href="|/courses?page=${currentPage}&size=10&title=${titleFilter}&sortBy=title&sortDirection=${sortBy == 'title' && sortDirection == 'asc' ? 'desc' : 'asc'}|">
             Titolo
             <th:block th:if="${sortBy=='title' && sortDirection=='asc'}">
                 <i class="fas fa-caret-up"></i>
@@ -55,7 +55,7 @@
         </a>
     </div>
     <div class="col-md-2">
-        <a th:href="|?page=${currentPage}&size=10&title=${titleFilter}&sortBy=rating&sortDirection=${sortBy == 'rating' && sortDirection == 'asc' ? 'desc' : 'asc'}|">
+        <a th:href="|/courses?page=${currentPage}&size=10&title=${titleFilter}&sortBy=rating&sortDirection=${sortBy == 'rating' && sortDirection == 'asc' ? 'desc' : 'asc'}|">
             Valutazione
             <th:block th:if="${sortBy=='rating' && sortDirection=='asc'}">
                 <i class="fas fa-caret-up"></i>
@@ -66,7 +66,7 @@
         </a>
     </div>
     <div class="col-md-2">
-        <a th:href="|?page=${currentPage}&size=10&title=${titleFilter}&sortBy=currentPriceAmount&sortDirection=${sortBy == 'currentPriceAmount' && sortDirection == 'asc' ? 'desc' : 'asc'}|">
+        <a th:href="|/courses?page=${currentPage}&size=10&title=${titleFilter}&sortBy=currentPriceAmount&sortDirection=${sortBy == 'currentPriceAmount' && sortDirection == 'asc' ? 'desc' : 'asc'}|">
             Prezzo
             <th:block th:if="${sortBy=='currentPriceAmount' && sortDirection=='asc'}">
                 <i class="fas fa-caret-up"></i>
