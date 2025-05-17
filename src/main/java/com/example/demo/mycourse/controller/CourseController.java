@@ -141,6 +141,7 @@ public class CourseController {
     @GetMapping(value = "/course/{id}/detail")
     public String courseDetail(@PathVariable Integer id,
                                @RequestParam(name = "message", required = false) String message,
+                               @RequestParam(name = "message1", required = false) String message1,
                                Model model,
                                Principal principal) {
         Course course = courseService.getCourseByIdWithLessons(id);
@@ -176,6 +177,7 @@ public class CourseController {
         model.addAttribute("isStudent", isStudent);
         model.addAttribute("subscription",subscription);
         model.addAttribute("message", message);
+        model.addAttribute("message1", message1);
         // Calcola la durata totale
         Duration totalDuration = calculateTotalDuration(course.getLessons());
         model.addAttribute("course", course);
@@ -186,7 +188,6 @@ public class CourseController {
     }
     // GET /courses/{id}/edit -> mostra form di modifica
     @GetMapping("/{id}/edit")
-    @PreAuthorize("hasAuthority('ROLE_TEACHER')")
     public String editCourse(@PathVariable("id") Integer id,
                              @RequestParam(name = "message", required = false) String message,
                              @RequestParam(name = "message1", required = false) String message1,
@@ -294,13 +295,12 @@ public class CourseController {
 }
     // POST /courses/{id}/delete -> cancella un corso
     @PostMapping("/{id}/delete")
-    @PreAuthorize("hasAuthority('ROLE_TEACHER')")
     public String deleteCourse(@PathVariable("id") Integer id,Principal principal,Model model) {
         Course course = courseService.findById(id);
         String loggedUsername = principal.getName(); // es: "mariorossi"
         Subscription subscription = subscriptionRepository.findByCourse_Id(id);
         if(subscription != null)
-            return "redirect:/courses/course/" + course.getId() + "/detail?message=Corso acquistato, impossibile eliminarlo!";
+            return "redirect:/courses/course/" + course.getId() + "/detail?message1=Corso acquistato, impossibile eliminarlo!";
         // SOLO L'AMMINISTRATORE PUO' ELIMINARE UN CORSO
         boolean canDelete = false;
         Set<Role> roles = userRepository.findByUsername(loggedUsername).getRoles();
