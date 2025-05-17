@@ -39,7 +39,6 @@
             <th:block th:if="${canEdit}">
                 <div class="col-md-3 d-flex align-items-center">
                     <button type="submit" class="btn btn-primary btn-lg btn-block">Salva</button>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <button class="btn btn-danger btn-lg btn-block" type="button"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">Elimina</button>
                 </div>
             </th:block>&nbsp;
         </div>
@@ -131,29 +130,6 @@
             </form>
         </div>
     </div>
-    <section>
-    <form method="post" th:action="|@{/courses/{id}/delete(id=${course.getId()})}|">
-        <input type="hidden" name="_csrf" value="${_csrf.token}" />
-        <!-- Modal -->
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Elimina Corso</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        Stai per eliminare il corso e tutte le lezioni associate. Sei sicuro?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Elimina</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
-</section>
 <script>
     $(document).ready(function() {
         $('#description').summernote({

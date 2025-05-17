@@ -29,6 +29,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/courses")
@@ -67,7 +68,7 @@ public class CourseController {
 
         String loggedUsername = principal.getName();
         User user = userRepository.findByUsername(loggedUsername);
-        if (user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_TEACHER")))
+        if (user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_EDITOR")))
         {
             model.addAttribute("isTeacher",true);
         }
@@ -95,7 +96,6 @@ public class CourseController {
     }
     // POST /courses -> salva un nuovo corso
     @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_TEACHER')")
     public String create(@Valid @ModelAttribute("course") Course course,
                          BindingResult bindingResult,
                          @RequestParam("g-recaptcha-response") String captchaResponse,
@@ -150,6 +150,7 @@ public class CourseController {
         boolean canEdit = false;
         boolean subscription = false;
         boolean isStudent = false;
+        boolean isAdmin = false;
         // L'utente loggato
         String loggedUsername = principal.getName();
         User user = userRepository.findByUsername(loggedUsername);
@@ -164,7 +165,14 @@ public class CourseController {
             return "security/access-denied";
         // Verifico se il proprietario del corso è lo stesso che ha fatto login
         canEdit = (course.getUserOwner().getUsername().equals(loggedUsername));
+        Set<Role> roles = user.getRoles();
+        for (Role role : roles) {
+            if (role.getName().equals("ROLE_ADMIN")) {
+                isAdmin = true;
+            }
+        }
         model.addAttribute("canEdit", canEdit);
+        model.addAttribute("isAdmin", isAdmin);
         model.addAttribute("isStudent", isStudent);
         model.addAttribute("subscription",subscription);
         model.addAttribute("message", message);
@@ -196,6 +204,7 @@ public class CourseController {
         {
             boolean isStudent = false;
             boolean subscription = false;
+            boolean isAdmin = false;
             // L'utente loggato
             String loggedUsername = principal.getName();
             User user = userRepository.findByUsername(loggedUsername);
@@ -213,7 +222,14 @@ public class CourseController {
                 return "security/access-denied";
             // Verifico se il proprietario del corso è lo stesso che ha fatto login
             boolean canEdit = (course.getUserOwner().getUsername().equals(loggedUsername));
+            Set<Role> roles = user.getRoles();
+            for (Role role : roles) {
+                if (role.getName().equals("ROLE_ADMIN")) {
+                    isAdmin = true;
+                }
+            }
             model.addAttribute("canEdit", canEdit);
+            model.addAttribute("isAdmin", isAdmin);
             model.addAttribute("subscription",subscription);
             model.addAttribute("isStudent",isStudent);
             model.addAttribute("course", course);
@@ -225,7 +241,6 @@ public class CourseController {
     }
     // POST /courses/{id} -> aggiorna un corso esistente
     @PostMapping("/{id}/{iduser}")
-    @PreAuthorize("hasAuthority('ROLE_TEACHER')")
     public String updateCourse(@PathVariable("id") Integer id, @PathVariable("iduser") Integer idUser,
                                @ModelAttribute("course") @Valid Course updatedCourse,
                                BindingResult bindingResult,
@@ -286,13 +301,16 @@ public class CourseController {
         Subscription subscription = subscriptionRepository.findByCourse_Id(id);
         if(subscription != null)
             return "redirect:/courses/course/" + course.getId() + "/detail?message=Corso acquistato, impossibile eliminarlo!";
-        // Verifico se il proprietario del corso è lo stesso che ha fatto login
-        boolean canEdit = course.getUserOwner().getUsername().equals(loggedUsername);
-        User user = courseService.findByUsername(course.getUserOwner().getUsername());
-        if (!canEdit || user == null) {
-            // se non sei il proprietario, redirect o errore
-            return "redirect:security/access-denied";
+        // SOLO L'AMMINISTRATORE PUO' ELIMINARE UN CORSO
+        boolean canDelete = false;
+        Set<Role> roles = userRepository.findByUsername(loggedUsername).getRoles();
+        for (Role role : roles) {
+            if (role.getName().equals("ROLE_ADMIN"))
+                canDelete = true;
         }
+        if (!canDelete)
+            // se non sei l'amministratore errore
+            return "security/access-denied";
         courseService.deleteCourse(id);
         return "redirect:/courses?message=Corso eliminato con successo!";
     }
