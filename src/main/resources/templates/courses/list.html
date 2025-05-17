@@ -1,0 +1,144 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:c="https://jakarta.ee/xml/ns/jakartaee">
+<!-- Inclusione dell'header -->
+<div th:insert="base :: headerFragment"></div>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Dettaglio</title>
+</head>
+<body>
+<br>
+<!-- Alert Condizionale -->
+<div class="row">
+    <div class="col-md-12">
+        <th:block th:if="${!#strings.isEmpty(message)}">
+            <div class="alert alert-success" role="alert">
+                <th:block th:text="${message}"></th:block>
+            </div>
+        </th:block>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-md-8">
+            <th:block th:if="${isTeacher}">
+                <div>
+                    <h2>Catalogo dei corsi <a th:href="@{/courses/new}" class="btn btn-outline-primary btn-sm"><i class="fa fa-plus"></i> Crea nuovo </a></h2>
+                </div>
+            </th:block>
+            <!-- Qui dentro verrà mostrato solo se l'utente loggato ha 'ROLE_TEACHER' -->
+    </div>
+    <div class="col-md-4 d-flex align-items-center">
+        <form method="get" action="/courses">
+            <div class="input-group">
+                <input type="text" name="title" th:value="${titleFilter}" placeholder="Cerca..." aria-label="Cerca..." aria-describedby="search-button">
+                <button class="input-group-text" id="search"><i class="fas fa-search"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-md-1"></div>
+    <div class="col-md-5">
+        <a th:href="|/courses?page=${currentPage}&size=10&title=${titleFilter}&sortBy=title&sortDirection=${sortBy == 'title' && sortDirection == 'asc' ? 'desc' : 'asc'}|">
+            Titolo
+            <th:block th:if="${sortBy=='title' && sortDirection=='asc'}">
+                <i class="fas fa-caret-up"></i>
+            </th:block>
+            <th:block th:if="${sortBy=='title' && sortDirection=='desc'}">
+                <i class="fas fa-caret-down"></i>
+            </th:block>
+        </a>
+    </div>
+    <div class="col-md-2">
+        <a th:href="|/courses?page=${currentPage}&size=10&title=${titleFilter}&sortBy=rating&sortDirection=${sortBy == 'rating' && sortDirection == 'asc' ? 'desc' : 'asc'}|">
+            Valutazione
+            <th:block th:if="${sortBy=='rating' && sortDirection=='asc'}">
+                <i class="fas fa-caret-up"></i>
+            </th:block>
+            <th:block th:if="${sortBy=='rating' && sortDirection=='desc'}">
+                <i class="fas fa-caret-down"></i>
+            </th:block>
+        </a>
+    </div>
+    <div class="col-md-2">
+        <a th:href="|/courses?page=${currentPage}&size=10&title=${titleFilter}&sortBy=currentPriceAmount&sortDirection=${sortBy == 'currentPriceAmount' && sortDirection == 'asc' ? 'desc' : 'asc'}|">
+            Prezzo
+            <th:block th:if="${sortBy=='currentPriceAmount' && sortDirection=='asc'}">
+                <i class="fas fa-caret-up"></i>
+            </th:block>
+            <th:block th:if="${sortBy=='currentPriceAmount' && sortDirection=='desc'}">
+                <i class="fas fa-caret-down"></i>
+            </th:block>
+        </a>
+    </div>
+    <div class="col-md-2"></div>
+</div>
+    <th:block th:each="course:${courses}">
+        <hr>
+        <div class="row course">
+            <div class="col-md-1">
+                <th:block th:if="${#strings.contains(course.getImagePath(), 'uploads')}">
+                    <img name="imagePath" th:src="${course.getImagePath()}" th:alt="${course.getImagePath()}"  width="52" height="52">
+                </th:block>
+                <th:block th:if="${!#strings.contains(course.getImagePath(), 'uploads')}">
+                    <img name="imagePath" th:src="@{/static/images/{imagePath}(imagePath=${course.getImagePath()})}" alt="image"  width="52" height="52">
+                </th:block>
+            </div>
+            <div class="col-md-5">
+                <h2><th:block th:text="${course.getTitle()}"></th:block></h2>
+                <author>di <th:block th:text="${course.getAuthor()}"></th:block></author>
+            </div>
+            <div class="col-md-2 rating" title="Rating">
+                <th:block th:each="star : ${#numbers.sequence(1,course.getFullStars(),1)}">
+                    <i class="fas fa-star" style="color: gold;"></i>
+                </th:block>
+                <th:block th:if="${course.hasHalfStar}">
+                    <i class="fas fa-star-half-alt" style="color: gold;" ></i>
+                </th:block>
+                <th:block th:each="star : ${#numbers.sequence(1,course.getEmptyStars(),1)}">
+                    <i class="far fa-star" style="color: gold;"></i>
+                </th:block>
+            </div>
+            <div class="col-md-2 price-container">
+                <span class="current-price">EUR <th:block th:text="${course.getCurrentPriceAmount()}"></th:block></span>
+                <th:block th:if="${course.getFullPriceAmount() != course.getCurrentPriceAmount()}">
+                    <br><span class="full-price">EUR <th:block th:text="${course.getFullPriceAmount()}"></th:block></span>
+                </th:block>
+            </div>
+            <div class="col-md-2 d-flex align-items-center">
+                <a class="btn btn-outline-primary" th:href="|@{/courses/course/{id}/detail(id=${course.getId()})}|">Dettaglio</a>
+            </div>
+        </div>
+    </th:block>
+<br/>
+<th:block th:if="${totalPages > 0}">
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        <li class="page-item" th:classappend="${currentPage == 0 ? 'disabled' : ''}">
+            <a class="page-link" th:href="|?page=${currentPage - 1}&size=10&title=${titleFilter}&sortBy=${sortBy}&sortDirection=${sortDirection}|" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <th:block th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+            <li class="page-item" th:classappend="${i == currentPage} ? 'active' : ''">
+                <a class="page-link" th:href="|?page=${i}&size=10&title=${titleFilter}&sortBy=${sortBy}&sortDirection=${sortDirection}|">
+                    <th:block th:text="${i + 1}"></th:block>
+                </a>
+            </li>
+        </th:block>
+        <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled' : ''">
+            <a class="page-link" th:href="|?page=${currentPage + 1}&size=10&title=${titleFilter}&sortBy=${sortBy}&sortDirection=${sortDirection}|" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+</th:block>
+</body>
+<div th:insert="footer :: footerFragment"></div>
+</html>

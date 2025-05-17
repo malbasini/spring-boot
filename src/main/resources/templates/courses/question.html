@@ -1,0 +1,44 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:c="https://jakarta.ee/xml/ns/jakartaee">
+<!-- Inclusione dell'header -->
+<div th:insert="base :: headerFragment"></div>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Fai una domanda</title>
+</head>
+<body>
+<br>
+<!-- Alert Condizionale -->
+<div class="row">
+    <div class="col-md-12">
+        <th:block th:if="${!#strings.isEmpty(error)}">
+            <div class="alert alert-danger" role="alert">
+                <th:block th:text="${error}"></th:block>
+            </div>
+        </th:block>
+    </div>
+</div>
+<br>
+<h1>Fai una domanda a <th:block th:text="${courses.getAuthor()} + ' docente di ' + ${courses.getTitle()}"></th:block></h1>
+<div class="row">
+    <div class="col-12">
+        <form method="POST" th:action="@{/courses/{id}/sendquestion(id=${courses.getId()})}">
+            <label>Fai una domanda</label>
+            <textarea name="question" class="form-control mb-3" rows="10"></textarea>
+            <button type="submit" class="btn btn-primary mt-3"><i class="far fa-paper-plane"></i> Invia domanda</button>
+            <br>
+            <div class="row">
+                <div class="col-md-4"></div>
+                <div class="col-md-8">
+                    <div class="g-recaptcha" th:attr="data-sitekey=${@captchaSettings.getSite()}"></div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<div th:insert="footer :: footerFragment"></div>
+</html>

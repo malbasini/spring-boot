@@ -1,0 +1,23 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      th:inline="text">
+<div th:insert="~{base :: headerFragment}"></div>
+<br>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Errore</title>
+  <div class="row">
+    <div class="col-md-12">
+      <th:block th:if="${!#strings.isEmpty(message)}">
+        <div class="alert alert-danger" role="alert">
+          <th:block th:text="${message}"></th:block>
+        </div>
+      </th:block>
+    </div>
+  </div>
+</head>
+<body>
+</body>
+</html>
+<div th:insert="~{footer :: footerFragment}"></div>

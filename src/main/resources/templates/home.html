@@ -1,0 +1,107 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:c="https://jakarta.ee/xml/ns/jakartaee">
+<!-- Inclusione dell'header -->
+<div th:insert="base :: headerFragment"></div>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Home Page</title>
+</head>
+<body>
+<div class="jumbotron">
+    <h1 class="display-4">Benvenuto su MyCourse!</h1>
+    <p class="lead">Impara in maniera facile e divertente con i nostri corsi online!<br>
+        Scegli da un vasto catalogo sempre a tua disposizione.</p>
+    <br/>
+    <br/>
+    <p><a class="btn btn-dark" href="/courses">Sfoglia il catalogo dei corsi <i class="fas fa-angle-right"></i></a></p>
+    <br/>
+    <br/>
+</div>
+<br/>
+<section>
+    <h2>Aggiunti di recente</h2>
+    <th:block th:each="course : ${newestCourses}">
+        <hr>
+        <div class="row course">
+            <div class="col-md-1">
+                <th:block th:if="${#strings.contains(course.getImagePath(), 'uploads')}">
+                    <img name="imagePath" th:src="${course.getImagePath()}" th:alt="${course.getImagePath()}"  width="52" height="52">
+                </th:block>
+                <th:block th:if="${!#strings.contains(course.getImagePath(), 'uploads')}">
+                    <img name="imagePath" th:src="@{/static/images/{imagePath}(imagePath=${course.getImagePath()})}" alt="image"  width="52" height="52">
+                </th:block>
+            </div>
+            <div class="col-md-5">
+                <h2><th:block th:text="${course.getTitle()}"></th:block></h2>
+                <author>di <th:block th:text="${course.getAuthor()}"></th:block></author>
+            </div>
+            <div class="col-md-2 rating" title="Rating">
+                <th:block th:each="star : ${#numbers.sequence(1,course.getFullStars(),1)}">
+                    <i class="fas fa-star" style="color: gold;"></i>
+                </th:block>
+                <th:block th:if="${course.hasHalfStar}">
+                    <i class="fas fa-star-half-alt" style="color: gold;" ></i>
+                </th:block>
+                <th:block th:each="star : ${#numbers.sequence(1,course.getEmptyStars(),1)}">
+                    <i class="far fa-star" style="color: gold;"></i>
+                </th:block>
+            </div>
+            <div class="col-md-2 price-container">
+                <span class="current-price">EUR <th:block th:text="${course.getCurrentPriceAmount()}"></th:block></span>
+                <th:block th:if="${course.getFullPriceAmount() != course.getCurrentPriceAmount()}">
+                    <br><span class="full-price">EUR <th:block th:text="${course.getFullPriceAmount()}"></th:block></span>
+                </th:block>
+            </div>
+            <div class="col-md-2 d-flex align-items-center">
+                <a class="btn btn-outline-primary" th:href="|@{/courses/course/{id}/detail(id=${course.getId()})}|">Dettaglio</a>
+            </div>
+        </div>
+    </th:block>
+</section>
+<section>
+    <h2>I migliori di sempre</h2>
+    <th:block th:each="course : ${topRatedCourses}">
+        <hr>
+        <div class="row course">
+            <div class="col-md-1">
+                <th:block th:if="${#strings.contains(course.getImagePath(), 'uploads')}">
+                    <img name="imagePath" th:src="${course.getImagePath()}" th:alt="${course.getImagePath()}"  width="52" height="52">
+                </th:block>
+                <th:block th:if="${!#strings.contains(course.getImagePath(), 'uploads')}">
+                    <img name="imagePath" th:src="@{/static/images/{imagePath}(imagePath=${course.getImagePath()})}" alt="image"  width="52" height="52">
+                </th:block>
+            </div>
+            <div class="col-md-5">
+                <h2><th:block th:text="${course.getTitle()}"></th:block></h2>
+                <author>di <th:block th:text="${course.getAuthor()}"></th:block></author>
+            </div>
+            <div class="col-md-2 rating" title="Rating">
+                <th:block th:each="star : ${#numbers.sequence(1,course.getFullStars(),1)}">
+                    <i class="fas fa-star" style="color: gold;"></i>
+                </th:block>
+                <th:block th:if="${course.hasHalfStar}">
+                    <i class="fas fa-star-half-alt" style="color: gold;" ></i>
+                </th:block>
+                <th:block th:each="star : ${#numbers.sequence(1,course.getEmptyStars(),1)}">
+                    <i class="far fa-star" style="color: gold;"></i>
+                </th:block>
+            </div>
+            <div class="col-md-2 price-container">
+                <span class="current-price">EUR <th:block th:text="${course.getCurrentPriceAmount()}"></th:block></span>
+                <th:block th:if="${course.getFullPriceAmount() != course.getCurrentPriceAmount()}">
+                    <br><span class="full-price">EUR <th:block th:text="${course.getFullPriceAmount()}"></th:block></span>
+                </th:block>
+            </div>
+            <div class="col-md-2 d-flex align-items-center">
+                <a class="btn btn-outline-primary"  th:href="|@{/courses/course/{id}/detail(id=${course.getId()})}|">Dettaglio</a>
+            </div>
+        </div>
+    </th:block>
+</section>
+</body>
+<!-- Inclusione del footer -->
+<div th:insert="footer :: footerFragment"></div>
+</html>
