@@ -5,6 +5,7 @@ import com.example.demo.mycourse.model.Role;
 import com.example.demo.mycourse.model.User;
 import com.example.demo.mycourse.repository.AdminRepository;
 import com.example.demo.mycourse.repository.RoleRepository;
+import com.example.demo.mycourse.service.AdminService;
 import com.example.demo.mycourse.service.CaptchaValidator;
 import com.example.demo.mycourse.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,6 @@ public class AuthController {
     private RoleRepository roleRepository;
     @Autowired
     private AdminRepository adminRepository;
-
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logoutPage()
@@ -124,7 +124,7 @@ public class AuthController {
                 user.setEnabled(true);
                 Role r = roleRepository.findByName(role);
                 user.setRoles(java.util.Collections.singleton(r));
-                userService.registerNewUser(user);
+                User u = userService.registerNewUser(user);
                 //VERIFICO CHE CI SIA UN SOLO AMMINISTRATORE
                 if(role.equals("ROLE_ADMIN")){
                     Admin a = adminRepository.findByRole("ROLE_ADMIN");
@@ -133,16 +133,16 @@ public class AuthController {
                         this.valorizzaCampi(model, username, fullname, email, password, role);
                         return "security/register";
                     }
-                }
-                else {
-                    //AGGIUNGO LA RIGA ALLA TABELLA ROLE
-                    Admin admin = new Admin();
-                    admin.setFullname(user.getFullname());
-                    admin.setEmail(user.getEmail());
-                    admin.setUserId(user.getId());
-                    admin.setRole(role);
-                    admin.setRevoke(0);
-                    adminRepository.save(admin);
+                    else {
+                        //AGGIUNGO LA RIGA ALLA TABELLA ROLE
+                        Admin admin = new Admin();
+                        admin.setFullname(user.getFullname());
+                        admin.setEmail(user.getEmail());
+                        admin.setUserId(u.getId());
+                        admin.setRole(role);
+                        admin.setRevoke(0);
+                        adminRepository.save(admin);
+                    }
                 }
                 model.addAttribute("message", "Registrazione effettuata con successo. Ora fai il login!");
                 return "security/register";

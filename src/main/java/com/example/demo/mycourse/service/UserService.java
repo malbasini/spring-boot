@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface UserService {
 
-    void registerNewUser(User user);
+    User registerNewUser(User user);
     List<Role> getAllRole();
     User login(String userName);
 }

@@ -17,14 +17,20 @@ public class UserServiceImpl implements UserService{
     private RoleRepository roleRepository;
     @Autowired
     private UserRepository userRepository;
+
+
     @Override
-    public void registerNewUser(User user) {
-        userRepository.save(user);
+    public User registerNewUser(User user) {
+        return userRepository.save(user);
     }
+    
+
     public List<Role> getAllRole()
     {
         return roleRepository.findAll();
     }
+
+
     public User login(String userName) {
         User user = userRepository.findByUsername(userName);
         if (user == null)

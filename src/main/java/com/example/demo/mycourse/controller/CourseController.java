@@ -291,7 +291,7 @@ public class CourseController {
             return "redirect:/courses/" + updatedCourse.getId() + "/edit";
         }
         courseService.updateCourse(updatedCourse);
-        return "redirect:/courses?message=Corso aggiornato con successo e ruolo inserito correttamente!";
+        return "redirect:/courses?message=Corso aggiornato con successo!";
 }
     // POST /courses/{id}/delete -> cancella un corso
     @PostMapping("/{id}/delete")

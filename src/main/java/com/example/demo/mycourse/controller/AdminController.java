@@ -88,18 +88,29 @@ public class AdminController {
         admin.setUserId(user.getId());
         admin.setRole(role);
         admin.setRevoke(0);
-        Role r = roleRepository.findByName(role);
-        //AGGIORNO IL RUOLO NELLA TABELLA REGISTER
-        if (!user.getRoles().contains(r)) {
-            user.getRoles().add(r);
-            userRepository.save(user);
-        }
         //VERIFICO CHE CI SIA UN SOLO AMMINISTRATORE
         if(role.equals("ROLE_ADMIN")){
             Admin a = adminRepository.findByRole("ROLE_ADMIN");
             if(a != null){
                 return "redirect:/role/" + role + "?message1=Ci puo essere un solo amministratore!" ;
             }
+            Admin ad = adminRepository.findByEmailAndRole(email,"ROLE_EDITOR");
+            if(ad != null) {
+                return "redirect:/role/" + role + "?message1=L'amministratore non puo essere anche editore!";
+            }
+        }
+        //L'AMMINISTRATORE NON PUO' AVERE DUE RUOLI
+        if(role.equals("ROLE_EDITOR")){
+            Admin a = adminRepository.findByEmailAndRole(email,"ROLE_ADMIN");
+            if(a != null){
+                return "redirect:/role/" + role + "?message1=L'amministratore non puo essere anche editore!" ;
+            }
+        }
+        Role r = roleRepository.findByName(role);
+        //AGGIORNO IL RUOLO NELLA TABELLA REGISTER
+        if (!user.getRoles().contains(r)) {
+            user.getRoles().add(r);
+            userRepository.save(user);
         }
         Admin savedAdmin = adminRepository.save(admin);
         return "redirect:/role/" + role + "?message=Ruolo assegnato correttamente" ;
