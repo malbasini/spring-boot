@@ -144,6 +144,16 @@ public class AuthController {
                         adminRepository.save(admin);
                     }
                 }
+                if(role.equals("ROLE_EDITOR")){
+                    //AGGIUNGO LA RIGA ALLA TABELLA ROLE
+                    Admin admin = new Admin();
+                    admin.setFullname(user.getFullname());
+                    admin.setEmail(user.getEmail());
+                    admin.setUserId(u.getId());
+                    admin.setRole(role);
+                    admin.setRevoke(0);
+                    adminRepository.save(admin);
+                }
                 model.addAttribute("message", "Registrazione effettuata con successo. Ora fai il login!");
                 return "security/register";
             } catch (Exception e) {
