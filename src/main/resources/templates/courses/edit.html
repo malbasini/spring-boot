@@ -1,0 +1,171 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:c="https://jakarta.ee/xml/ns/jakartaee">
+<div th:insert="base :: headerFragment"></div>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Modifica</title>
+</head>
+<body onload="image(false)">
+<br>
+<!-- Alert Condizionale -->
+<div class="row">
+    <div class="col-md-12">
+        <th:block th:if="${!#strings.isEmpty(message)}">
+            <div class="alert alert-danger" role="alert">
+                <th:block th:text="${message}"></th:block>
+            </div>
+        </th:block>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <th:block th:if="${!#strings.isEmpty(message1)}">
+            <div class="alert alert-success" role="alert">
+                <th:block th:text="${message1}"></th:block>
+            </div>
+        </th:block>
+    </div>
+</div>
+<br>
+<section class="course-info">
+    <form method="post" th:action="@{/courses/{id}/{iduser}(id=${course.getId()},iduser=${iduser})}">
+        <div class="row">
+            <div class="col-md-9">
+                <h1>Aggiorna Corso</h1>
+            </div>
+            <th:block th:if="${canEdit}">
+                <div class="col-md-3 d-flex align-items-center">
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">Salva</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                </div>
+            </th:block>&nbsp;
+        </div>
+        <input type="hidden" th:value="${course.getId()}">
+        <input type="hidden" th:id="iduser" th:name="iduser" th:value="${iduser}">
+        <div class="row">
+            <div class="col-md-9">
+                <div class="form-group">
+                    <label>Titolo</label>
+                    <input type="text" id="title" name="title" readonly="readonly"   class="form-control form-control-lg" th:value="${course.getTitle()}">
+                </div>
+                <br>
+                <th:block th:if="${#strings.isEmpty(course.getAuthor())}">
+                    <div class="form-group">
+                        <label>Autore</label>
+                        <input type="text" id="author" name="author" class="form-control form-control-lg" th:value="${course.getAuthor()}">
+                    </div>
+                </th:block>
+                <th:block th:if="${!#strings.isEmpty(course.getAuthor())}">
+                    <div class="form-group">
+                        <label>Autore</label>
+                        <input type="text" name="author" class="form-control form-control-lg" th:value="${course.getAuthor()}" readonly="readonly">
+                    </div>
+                </th:block>
+                <br>
+                <div class="form-group">
+                    <label>Descrizione</label>
+                    <textarea name="description" id="description" class="form-control" rows="18" th:utext="${course.getDescription()}"></textarea>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <aside>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="email" name="email" th:value="${course.getEmail()}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="FullPrice">Full Price</label>
+                        <div class="input-group">
+                            <text class="form-control" id="fullPriceCurrency" name="fullPriceCurrency" readonly="true" th:text="${course.getFullPriceCurrency()}"></text>
+                            <input type="number" step="any" id="fullPriceAmount" name="fullPriceAmount" th:value="${course.getFullPriceAmount()}" class="form-control form-control-block">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Current Price</label>
+                        <div class="input-group">
+                            <text class="form-control" id="currentPriceCurrency" name="currentPriceCurrency" readonly="true" th:text="${course.getCurrentPriceCurrency()}"></text>
+                            <input type="number" step="any" id="currentPriceAmount" name="currentPriceAmount" th:value="${course.getCurrentPriceAmount()}" class="form-control form-control-block">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Immagine</label>
+                        <div class="input-group">
+                                <th:block th:if="${#strings.contains(course.getImagePath(), 'uploads')}">
+                                    <img id="imagePath" name="imagePath" th:src="${course.getImagePath()}" alt="image" class="img-fluid course-image">
+                                </th:block>
+                                <th:block th:if="${!#strings.contains(course.getImagePath(), 'uploads')}">
+                                    <img id="imagePath" name="imagePath" th:src="@{/static/images/{imagePath}(imagePath=${course.getImagePath()})}" alt="image" class="img-fluid course-image">
+                                </th:block>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </form>
+</section>
+    <div class="row">
+        <div class="col-md-9"></div>
+        <div class="col-md-3 form-group">
+            <form th:action="|@{/courses/{id}/uploadImage(id=${course.getId()})}|" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="_csrf" value="${_csrf.token}" />
+                    <th:block th:if="${canEdit}">
+                        <div class="form-group">
+                            <div class="form-group">
+                                <input type="file" id="imageFile" name="imageFile" class="btn btn-success" th:src="@{${course.getImagePath()}}" onchange="updatePreview(this)" />
+                                <br>
+                                <br>
+                                <button type="submit" id="btnUpload" value="Upload Files" class="btn btn-warning"><i class="fas fa-cog"></i>Upload</button>
+                                <br>
+                                <label id="label1">Immagine Prodotto:</label>
+                                <br>
+                            </div>
+                            <div class="preview-container">
+                                <img id="preview" th:src="@{${course.getImagePath()}}">
+                            </div>
+
+                        </div>
+                    </th:block>&nbsp;
+            </form>
+        </div>
+    </div>
+<script>
+    $(document).ready(function() {
+        $('#description').summernote({
+            height: 300,                 // Altezza dell'editor
+            focus: true,                 // Posiziona il focus sull'editor
+            placeholder: '',  // Testo di esempio
+            toolbar: [
+                ['style', ['bold', 'italic']],
+                ['para', ['ul', 'ol']],
+                ['insert', ['video']],
+                ['view', ['codeview']]
+            ]
+        });
+    });
+</script>
+<script>
+    function updatePreview(inputFile) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#preview').attr('src', e.target.result);
+        };
+        reader.readAsDataURL(inputFile.files[0]);
+        image(true);
+    }
+</script>
+<script>
+    function image(visibility){
+        if(visibility == false){
+            document.getElementById("preview").style.visibility = "hidden";
+            document.getElementById("label1").style.visibility = "hidden";
+        }else{
+            document.getElementById("preview").style.visibility = "visible";
+            document.getElementById("label1").style.visibility = "visible";
+        }
+    }
+</script>
+</body>
+<div th:insert="footer :: footerFragment"></div>
+</html>

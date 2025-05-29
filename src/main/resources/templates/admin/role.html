@@ -1,0 +1,117 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:c="https://jakarta.ee/xml/ns/jakartaee">
+<!-- Inclusione dell'header -->
+<div th:insert="base :: headerFragment"></div>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Ruoli</title>
+</head>
+<body>
+<br>
+<!-- Alert Condizionale -->
+<div class="row">
+    <div class="col-md-12">
+        <th:block th:if="${!#strings.isEmpty(message)}">
+            <div class="alert alert-success" role="alert">
+                <th:block th:text="${message}"></th:block>
+            </div>
+        </th:block>
+    </div>
+</div>
+<!-- Alert Condizionale -->
+<div class="row">
+    <div class="col-md-12">
+        <th:block th:if="${!#strings.isEmpty(message1)}">
+            <div class="alert alert-danger" role="alert">
+                <th:block th:text="${message1}"></th:block>
+            </div>
+        </th:block>
+    </div>
+</div>
+<h1>Ruoli</h1>
+<form method="POST">
+    <div class="row">
+                <div class="col-md-4">
+                    <label>Email:</label>
+                    <hr>
+                    <input type="text" th:name="email" class="form-control" placeholder="Email" th:height="15px">
+                </div>
+                <div class="col-md-4">
+                    <label>Ruolo:</label>
+                    <hr>
+                    <select class="form-select form-select-mg mb-3" th:name="role" aria-label="Small select example"
+                            required="required" th:height="15px">
+                        <option value="" disabled selected>Selezionare un ruolo</option>
+                        <th:block th:each="role : ${roles}">
+                            <th:block th:if='${role.getName().equals("ROLE_ADMIN")}'>
+                                <option th:text='${role.getName().replace("ROLE_ADMIN","AMMINISTRATORE")}' th:value="${role.getName()}"></option>
+                            </th:block>
+                            <th:block th:if="${role.getName().equals('ROLE_EDITOR')}">
+                                <option th:text='${role.getName().replace("ROLE_EDITOR","DOCENTE")}' th:value="${role.getName()}"></option>
+                            </th:block>
+                        </th:block>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label>Operazione</label>
+                    <hr>
+                    <div>
+                        <button type="submit" formaction="/assign" class="btn btn-success btn-md" th:height="15px">Assegna</button>
+                        <button type="submit" class="btn btn-danger btn-md" formaction="/revoke" th:height="15px">Revoca</button>
+                    </div>
+                </div>
+    </div>
+</form>
+<br>
+<!-- Tab di ruoli -->
+<ul class="nav nav-tabs mb-3">
+    <th:block th:each="role : ${roles}">
+        <li class="nav-item">
+            <th:block th:if="${role.getName().equals('ROLE_ADMIN')}">
+                <a class="nav-link"
+                   th:classappend="${role.getName()== activeRole} ? 'active' : ''"
+                   th:href="@{/role/{role}(role=${role.getName()})}"
+                   aria-current="page"
+                   th:text="${role.getName().replace('ROLE_ADMIN','AMMINISTRATORE')}"></a>
+            </th:block>
+            <th:block th:if="${role.getName().equals('ROLE_EDITOR')}">
+                <a class="nav-link"
+                   th:classappend="${role.getName()== activeRole} ? 'active' : ''"
+                   th:href="@{/role/{role}(role=${role.getName()})}"
+                   aria-current="page"
+                   th:text="${role.getName().replace('ROLE_EDITOR','DOCENTE')}"></a>
+            </th:block>
+        </li>
+    </th:block>
+</ul>
+<br>
+<th:block th:if="${activeRole != null && activeRole.equals('ROLE_EDITOR')}">
+<div th:each="user : ${users}">
+    <div class="row">
+        <div class="col-6"><th:block th:text="${user.getFullname()}"></th:block></div>
+        <div class="col-6"><th:block th:text="${user.getEmail()}"></th:block> </div>
+    </div>
+    <hr>
+</div>
+</th:block>
+<th:block th:if="${activeRole != null && activeRole.equals('ROLE_ADMIN')}">
+    <div th:each="admin : ${admins}">
+        <div class="row">
+            <div class="col-6"><th:block th:text="${admin.getFullname()}"></th:block></div>
+            <div class="col-6"><th:block th:text="${admin.getEmail()}"></th:block> </div>
+        </div>
+        <hr>
+    </div>
+</th:block>
+
+</body>
+<script>
+    function submit(){
+        document.getElementById("myform").submit();
+    }
+</script>
+</html>
+<div th:insert="footer :: footerFragment"></div>
