@@ -35,16 +35,17 @@
 <section class="course-info">
     <div class="row">
         <div class="col-md-9">
-            <h1><th:block th:text="${course.getTitle()}"></th:block> </h1>
+            <h1><th:block th:text="${course.getTitle()}"></th:block>
+            <th:block th:if="${canEdit==true}">
+                <a class="btn btn-outline-primary btn-sm" th:href="@{/courses/{id}/edit(id=${course.getId()})}"><i class="fas fa-pencil-alt"></i> Modifica</a>&nbsp;&nbsp;&nbsp;
+            </th:block>&nbsp;
+            </h1>
         </div>
         <br>
                 <div class="col-md-3">
                 <th:block th:if="${isStudent or canEdit or isAdmin}">
                     <aside>
                     <br>
-                    <th:block th:if="${canEdit==true}">
-                        <a class="btn btn-warning outline" th:href="@{/courses/{id}/edit(id=${course.getId()})}">Modifica</a>&nbsp;&nbsp;&nbsp;
-                    </th:block>&nbsp;
                     <th:block th:if="${subscription==true}">
                           <span class="alert alert-secondary btn-block">Sei iscritto al corso</span>
                     </th:block>
@@ -56,7 +57,7 @@
                      </th:block>
                     <th:block th:if="${isStudent && not subscription}">
                         <div class="dropdown">
-                                <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button class="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Iscriviti
                                 </button>
                                 <ul class="dropdown-menu">
