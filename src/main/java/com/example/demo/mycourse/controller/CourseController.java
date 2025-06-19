@@ -201,25 +201,24 @@ public class CourseController {
         if(course.getUserOwner() == null) {
             return "security/access-denied";
         }
-        else
-        {
+        else {
             boolean isStudent = false;
             boolean subscription = false;
             boolean isAdmin = false;
             // L'utente loggato
             String loggedUsername = principal.getName();
             User user = userRepository.findByUsername(loggedUsername);
-            if(user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_STUDENT"))) {
+            if (user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_STUDENT"))) {
                 isStudent = true;
-                Subscription s= subscriptionRepository.findByCourse_Id(course.getId());
-                if(s != null) {
+                Subscription s = subscriptionRepository.findByCourse_Id(course.getId());
+                if (s != null) {
                     subscription = true;
-                    model.addAttribute("subscription",subscription);
-                    model.addAttribute("isStudent",isStudent);
+                    model.addAttribute("subscription", subscription);
+                    model.addAttribute("isStudent", isStudent);
                     return "courses/edit";
                 }
             }
-            if(course.getUserOwner()==null)
+            if (course.getUserOwner() == null)
                 return "security/access-denied";
             // Verifico se il proprietario del corso è lo stesso che ha fatto login
             boolean canEdit = (course.getUserOwner().getUsername().equals(loggedUsername));
@@ -231,13 +230,13 @@ public class CourseController {
             }
             model.addAttribute("canEdit", canEdit);
             model.addAttribute("isAdmin", isAdmin);
-            model.addAttribute("subscription",subscription);
-            model.addAttribute("isStudent",isStudent);
+            model.addAttribute("subscription", subscription);
+            model.addAttribute("isStudent", isStudent);
             model.addAttribute("course", course);
-            model.addAttribute("iduser",course.getUserOwner().getId());
+            model.addAttribute("iduser", course.getUserOwner().getId());
             model.addAttribute("message", message);
             model.addAttribute("message1", message1);
-            return "/courses/edit";
+            return "courses/edit";
         }
     }
     // POST /courses/{id} -> aggiorna un corso esistente
