@@ -37,7 +37,7 @@
         <div class="col-md-9">
             <h1><th:block th:text="${course.getTitle()}"></th:block>
             <th:block th:if="${canEdit==true}">
-                <a class="btn btn-outline-primary btn-sm" th:href="@{/courses/466/edit}"><i class="fas fa-pencil-alt"></i> Modifica</a>&nbsp;&nbsp;&nbsp;
+                <a class="btn btn-outline-primary btn-sm" th:href="@{/courses/{id}/edit(id = ${course.getId()})}"><i class="fas fa-pencil-alt"></i> Modifica</a>&nbsp;&nbsp;&nbsp;
             </th:block>&nbsp;
             </h1>
         </div>
