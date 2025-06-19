@@ -1,0 +1,60 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:c="https://jakarta.ee/xml/ns/jakartaee">
+<!-- Inclusione dell'header -->
+<div th:insert="base :: headerFragment"></div>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Dettaglio</title>
+</head>
+<body>
+<br>
+<!-- Alert Condizionale -->
+<div class="row">
+    <div class="col-md-12">
+        <th:block th:if="${!#strings.isEmpty(message)}">
+            <div class="alert alert-danger" role="alert">
+                <th:block th:text="${message}"></th:block>
+            </div>
+        </th:block>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-md-12">
+        <th:block th:if="${!#strings.isEmpty(error)}">
+            <div class="alert alert-danger" role="alert">
+                <th:block th:text="${error}"></th:block>
+            </div>
+        </th:block>
+    </div>
+</div>
+<br>
+<h1>Crea Lezione</h1>
+<br>
+<form method="post" th:action="@{/lessons}">
+    <input type="hidden" name="courseId" th:value="${courseId}">
+    <div class="row">
+        <div class="col-md-2">
+            <label for="title" class="form-label">Titolo della lezione</label>
+        </div>
+        <div class="col-md-8 mb-3">
+            <input type="text" id="title" name="title" class="form-control form-control-lg" placeholder="Digita il titolo...">
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Crea lezione</button>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-8">
+            <div class="g-recaptcha" th:attr="data-sitekey=${@captchaSettings.getSite()}"></div>
+        </div>
+    </div>
+</form>
+</body>
+<div th:insert="footer :: footerFragment"></div>
+</html>

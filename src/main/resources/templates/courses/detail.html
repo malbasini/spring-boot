@@ -1,0 +1,199 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:c="https://jakarta.ee/xml/ns/jakartaee">
+<!-- Inclusione dell'header -->
+<div th:insert="base :: headerFragment"></div>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Dettaglio</title>
+</head>
+<body>
+<br>
+<!-- Alert Condizionale -->
+<div class="row">
+    <div class="col-md-12">
+        <th:block th:if="${!#strings.isEmpty(message)}">
+            <div class="alert alert-success" role="alert">
+                <th:block th:text="${message}"></th:block>
+            </div>
+        </th:block>
+    </div>
+</div>
+<!-- Alert Condizionale -->
+<div class="row">
+    <div class="col-md-12">
+        <th:block th:if="${!#strings.isEmpty(message1)}">
+            <div class="alert alert-danger" role="alert">
+                <th:block th:text="${message1}"></th:block>
+            </div>
+        </th:block>
+    </div>
+</div>
+<br>
+<section class="course-info">
+    <div class="row">
+        <div class="col-md-9">
+            <h1><th:block th:text="${course.getTitle()}"></th:block>
+            <th:block th:if="${canEdit==true}">
+                <a class="btn btn-outline-primary btn-sm" th:href="@{/courses/466/edit}"><i class="fas fa-pencil-alt"></i> Modifica</a>&nbsp;&nbsp;&nbsp;
+            </th:block>&nbsp;
+            </h1>
+        </div>
+        <br>
+                <div class="col-md-3">
+                <th:block th:if="${isStudent or canEdit or isAdmin}">
+                    <aside>
+                    <br>
+                    <th:block th:if="${subscription==true}">
+                          <span class="alert alert-secondary btn-block">Sei iscritto al corso</span>
+                    </th:block>
+                    <th:block th:if="${canEdit && not subscription}">
+                        <span class="alert alert-secondary btn-block">Sei l'autore del corso</span>
+                     </th:block>
+                     <th:block th:if="${isAdmin eq true}">
+                         <button class="btn btn-danger btn-lg btn-block" type="button"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">Elimina</button>
+                     </th:block>
+                     <th:block th:if="${isStudent && not subscription}">
+                        <div class="dropdown">
+                                <button class="btn btn-warning dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Iscriviti
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" th:href="@{/payment/paypal/{id}/pay(id=${course.getId()})}">Paypal</a></li>
+                                    <li><a class="dropdown-item" th:href="@{/payment/stripe/{id}/pay(id=${course.getId()})}">Stripe</a></li>
+                                </ul>
+                        </div>
+                    </th:block>&nbsp;
+                </aside>
+                </th:block>&nbsp;
+            </div>
+    </div>
+    <br>
+    <br>
+    <div class="row">
+        <div class="col-md-9">
+            <th:block th:utext="${course.getDescription()}"></th:block>
+        </div>
+        <div class="col-md-3">
+            <aside>
+                <author>di <th:block th:text="${course.getAuthor()}"></th:block></author>
+                <div class="col-md-1 rating" title="Rating">
+                    <th:block th:each="star : ${#numbers.sequence(1,course.getFullStars(),1)}">
+                        <i class="fas fa-star" style="color: gold;"></i>
+                    </th:block>
+                    <th:block th:if="${course.hasHalfStar}">
+                        <i class="fas fa-star-half-alt" style="color: gold;" ></i>
+                    </th:block>
+                    <th:block th:each="star : ${#numbers.sequence(1,course.getEmptyStars(),1)}">
+                        <i class="far fa-star" style="color: gold;"></i>
+                    </th:block>
+                </div>
+                <div class="col-md-4 price-container">
+                    <span class="current-price">EUR <th:block th:text="${course.getCurrentPriceAmount()}"></th:block></span>
+                    <th:block th:if="${course.getFullPriceAmount() != course.getCurrentPriceAmount()}">
+                        <br><span class="full-price">EUR <th:block th:text="${course.getFullPriceAmount()}"></th:block></span>
+                    </th:block>
+                </div>
+                <th:block th:if="${#strings.contains(course.getImagePath(), 'uploads')}">
+                    <img name="imagePath" th:src="${course.getImagePath()}" alt="image" class="img-fluid course-image">
+                </th:block>
+                <th:block th:if="${!#strings.contains(course.getImagePath(), 'uploads')}">
+                    <img name="imagePath" th:src="@{/static/images/{imagePath}(imagePath=${course.getImagePath()})}" alt="image" class="img-fluid course-image">
+                </th:block>
+                <br>
+                <th:block th:if="${subscription && isStudent}">
+                    <a th:href="@{/courses/{id}/question(id=${course.getId()})}" class="btn btn-block btn-outline-secondary mt-3">Fai una domanda</a>
+                    <a th:href="@{/courses/{id}/vote(id=${course.getId()})}" class="btn btn-block btn-outline-secondary mt-3" data-bs-toggle="modal" data-bs-target="#voteModal">Valuta il corso</a>
+                </th:block>
+            </aside>
+        </div>
+    </div>
+</section>
+<section>
+    <form method="post" th:action="|@{/courses/{id}/delete(id=${course.getId()})}|">
+        <input type="hidden" name="_csrf" value="${_csrf.token}" />
+        <!-- Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Elimina Corso</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Stai per eliminare il corso e tutte le lezioni associate. Sei sicuro?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Elimina</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
+<section class="course-lessons">
+    <th:block th:if="${(canEdit) || subscription}">
+            <h2>Lezioni</h2>
+            <th:block th:if="${(canEdit)}">
+                   <a class ="btn btn-outline-primary btn-sm" th:href="@{/lessons/new/{id}(id=${course.getId()})}"><i class ="fas fa-plus" ></i > Crea nuova </a>
+            </th:block>
+            <th:block th:each="lesson: ${course.lessons}">
+            <hr />
+                <div class="row">
+                    <div class="col-md-3 d-flex align-items-center">
+                        <th:block th:if="${(canEdit) || (subscription)}">
+                              <a th:href="@{/lessons/{id}/detail(id=${lesson.getId()})}"><th:block th:text="${lesson.getTitle()}"></th:block></a>
+                        </th:block>
+                        <th:block th:if="${not (canEdit) && not (subscription && isStudent)}">
+                            <th:block th:text="${lesson.getTitle()}"></th:block>
+                        </th:block>
+                    </div>
+                    <div class="col-md-7 d-flex align-items-center">
+                        <span><th:block th:utext="${lesson.getDescription()}"></th:block></span>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-center justify-content-end lesson-duration">
+                        <i class="far fa-clock"></i><time><th:block th:text="${lesson.getDuration()}"></th:block></time>
+                        <th:block th:if="${canEdit}">
+                            <a class="btn btn-outline-primary btn-sm ml-3" th:href="@{/lessons/{id}/edit(id=${lesson.getId()})}"><i class="fas fa-pencil-alt"></i></a>
+                        </th:block>
+                    </div>
+                </div>
+            </th:block>
+            <br>
+            <div class="row course-duration">
+                <div class="col-md-9 d-flex align-items-center">
+                    Totale
+                </div>
+                <div class="col-md-3 d-flex align-items-center justify-content-end">
+                    <i class="far fa-clock"></i><time><th:block th:text="${totalDuration}"></th:block></time>
+                </div>
+            </div>
+    </th:block>
+</section>
+<!-- Modal -->
+<div class="modal fade" id="voteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fs-5" id="exampleModalLabel">Esprimi la tua valutazione</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <iframe width="100%" height="100" frameBorder="0"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $('#voteModal').on('shown.bs.modal', function(event) {
+        $(this).find('iframe').attr('src', event.relatedTarget.href);
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+</body>
+<div th:insert="footer :: footerFragment"></div>
+</html>

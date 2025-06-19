@@ -1,0 +1,31 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:c="https://jakarta.ee/xml/ns/jakartaee">
+<!-- Inclusione dell'header -->
+<div th:insert="base :: headerFragment"></div>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Dettaglio</title>
+</head>
+<body>
+<br>
+<section class="lesson-info">
+    <div class="row">
+        <div class="col-md-12">
+            <h1><th:block th:text="${lesson.getTitle()}"></th:block></h1>
+            <br>
+            <p>Durata stimata: <th:block th:text="${lesson.getDuration()}"/></p>
+        </div>
+        <div class="col-md-12">
+            <th:block th:utext="${lesson.getDescription()}"></th:block>
+        </div>
+        <div class="col-md-12 mt-3">
+            <a th:href="@{/courses/course/{id}/detail(id=${lesson.getCourse().getId()})}"><i class="fas fa-arrow-left"></i> Torna al corso</a>
+        </div>
+    </div>
+</section>
+</body>
+<div th:insert="footer :: footerFragment"></div>
+</html>
