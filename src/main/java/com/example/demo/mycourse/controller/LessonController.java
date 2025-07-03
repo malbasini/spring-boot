@@ -89,7 +89,7 @@ public class LessonController {
             model.addAttribute("lesson", lesson);
             model.addAttribute("message1", message1);
             // gestisci errore se non trovato
-            return "/lessons/edit"; // JSP da mostrare";
+            return "lessons/edit"; // JSP da mostrare";
 
         }
         return "redirect:/lessons/edit";
