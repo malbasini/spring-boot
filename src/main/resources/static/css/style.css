@@ -9,7 +9,7 @@ body>.container {
     flex: 1;
 }
 body>footer {
-    background-color: #f5f5f5;
+    background-color: white;
 }
 
 h1 {
@@ -22,15 +22,15 @@ h1 {
     margin-bottom: 1px;
 }
 .current-price {
+    font-size: 1.0em;
     color: black; /* Verde */
-    font-size: 1em;
     margin-bottom: 2px; /* Riduce lo spazio sotto il prezzo corrente */
 }
 
 .full-price {
     text-decoration: line-through; /* Barrato */
     color: gray;
-    font-size: 1em; /* Riduzione font per differenziarlo */
+    font-size: 1.0em; /* Riduzione font per differenziarlo */
     margin-top: 2px; /* Riduce lo spazio sopra il prezzo pieno */
 }
 .course h2 {
