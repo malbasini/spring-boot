@@ -37,7 +37,7 @@
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <a class="nav-link" href="/">Home</a>
         <a class="nav-link" href="/courses">Catalogo corsi</a>
-        <sec:th:block sec:authorize="hasRole('ROLE_ADMIN')" >
+        <sec:th:block sec:authorize="hasRole('ADMIN')" >
                <a class="nav-link" th:href="@{/role/{role}(role='ROLE_ADMIN')}">Ruoli</a>
         </sec:th:block>
         <a class="nav-link" href="https://mailtrap.io">Mail Trap</a>
