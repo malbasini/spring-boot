@@ -59,8 +59,8 @@
                     <label>Operazione</label>
                     <hr>
                     <div>
-                        <button type="submit" formaction="/assign" class="btn btn-success btn-md" th:height="15px">Assegna</button>
-                        <button type="submit" class="btn btn-danger btn-md" formaction="/revoke" th:height="15px">Revoca</button>
+                        <button type="submit" formaction="/admin/roles/assign" class="btn btn-success btn-md" th:height="15px">Assegna</button>
+                        <button type="submit" formaction="/admin/roles/revoke" class="btn btn-danger btn-md" th:height="15px">Revoca</button>
                     </div>
                 </div>
     </div>
@@ -73,14 +73,14 @@
             <th:block th:if="${role.getName().equals('ROLE_ADMIN')}">
                 <a class="nav-link"
                    th:classappend="${role.getName()== activeRole} ? 'active' : ''"
-                   th:href="@{/role/{role}(role=${role.getName()})}"
+                   th:href="@{/admin/roles(role=${role.getName()})}"
                    aria-current="page"
                    th:text="${role.getName().replace('ROLE_ADMIN','AMMINISTRATORE')}"></a>
             </th:block>
             <th:block th:if="${role.getName().equals('ROLE_EDITOR')}">
                 <a class="nav-link"
                    th:classappend="${role.getName()== activeRole} ? 'active' : ''"
-                   th:href="@{/role/{role}(role=${role.getName()})}"
+                   th:href="@{/admin/roles(role=${role.getName()})}"
                    aria-current="page"
                    th:text="${role.getName().replace('ROLE_EDITOR','DOCENTE')}"></a>
             </th:block>
@@ -106,12 +106,6 @@
         <hr>
     </div>
 </th:block>
-
 </body>
-<script>
-    function submit(){
-        document.getElementById("myform").submit();
-    }
-</script>
 </html>
 <div th:insert="footer :: footerFragment"></div>

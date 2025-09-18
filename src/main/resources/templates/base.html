@@ -38,7 +38,7 @@
         <a class="nav-link" href="/">Home</a>
         <a class="nav-link" href="/courses">Catalogo corsi</a>
         <sec:th:block sec:authorize="hasRole('ADMIN')" >
-               <a class="nav-link" th:href="@{/role/{role}(role='ROLE_ADMIN')}">Ruoli</a>
+               <a class="nav-link" th:href="@{/admin/roles}">Ruoli</a>
         </sec:th:block>
         <a class="nav-link" href="https://mailtrap.io">Mail Trap</a>
     </ul>

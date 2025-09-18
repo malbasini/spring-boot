@@ -3,6 +3,8 @@ package com.example.demo.mycourse.model;
 import jakarta.persistence.Table;
 
 import jakarta.persistence.*;
+
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -42,4 +44,14 @@ public class Role {
     public void setUsers(Set<User> users) {
         this.users = users;
     }
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Role)) return false;
+        return Objects.equals(name, ((Role) o).getName());
+    }
+    @Override public int hashCode() { return Objects.hash(name); }
+
+
+
 }

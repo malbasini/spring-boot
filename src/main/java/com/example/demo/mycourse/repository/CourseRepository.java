@@ -39,6 +39,7 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
     @Modifying
     @Query("UPDATE Course c SET c.imagePath = :image WHERE c.id = :id")
     int updateImage(@Param("image") String image, @Param("id") int id);
+    boolean existsByIdAndUserOwner_Username(int id, String username);
 }
 
 

@@ -29,13 +29,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers
                         .frameOptions(frameOptions -> frameOptions.sameOrigin()))
-                .authorizeHttpRequests(authorize -> authorize
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/**").permitAll() //
                         .requestMatchers("/login", "/register", "/doRegister", "/doLogin").permitAll() // Rotte pubbliche
-                        .requestMatchers("/admin/**").hasRole("ADMIN") // Accesso ristretto agli amministratori
-                        .requestMatchers("/user/**").hasRole("USER") // Accesso ristretto agli utenti
-                        .requestMatchers("/editor/**").hasRole("EDITOR") // Accesso ristretto agli utenti TEACHER
-                        .requestMatchers("/student/**").hasRole("STUDENT") // Accesso ristretto agli utenti STUDENT
+                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // Accesso ristretto agli amministratori
+                        .requestMatchers("/editor/**").hasAuthority("ROLE_EDITOR") // Accesso ristretto agli utenti TEACHER
+                        .requestMatchers("/student/**").hasAuthority("ROLE_STUDENT") // Accesso ristretto agli utenti STUDENT
                         .requestMatchers("/admin/role").permitAll()
                         .anyRequest().authenticated() // Tutto il resto richiede autenticazione
                 )
