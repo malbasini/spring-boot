@@ -5,7 +5,6 @@ import com.example.demo.mycourse.model.Role;
 import com.example.demo.mycourse.model.User;
 import com.example.demo.mycourse.repository.AdminRepository;
 import com.example.demo.mycourse.repository.RoleRepository;
-import com.example.demo.mycourse.service.AdminService;
 import com.example.demo.mycourse.service.CaptchaValidator;
 import com.example.demo.mycourse.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,24 +134,12 @@ public class AuthController {
                     }
                     else {
                         //AGGIUNGO LA RIGA ALLA TABELLA ROLE
-                        Admin admin = new Admin();
-                        admin.setFullname(user.getFullname());
-                        admin.setEmail(user.getEmail());
-                        admin.setUserId(u.getId());
-                        admin.setRole(role);
-                        admin.setRevoke(0);
-                        adminRepository.save(admin);
+                        InsertRole(role, user, u);
                     }
                 }
                 if(role.equals("ROLE_EDITOR")){
                     //AGGIUNGO LA RIGA ALLA TABELLA ROLE
-                    Admin admin = new Admin();
-                    admin.setFullname(user.getFullname());
-                    admin.setEmail(user.getEmail());
-                    admin.setUserId(u.getId());
-                    admin.setRole(role);
-                    admin.setRevoke(0);
-                    adminRepository.save(admin);
+                    InsertRole(role, user, u);
                 }
                 model.addAttribute("message", "Registrazione effettuata con successo. Ora fai il login!");
                 return "security/register";
@@ -161,6 +148,17 @@ public class AuthController {
                 return "security/register";
             }
         }
+
+    private void InsertRole(@RequestParam("roleId") String role, User user, User u) {
+        Admin admin = new Admin();
+        admin.setFullname(user.getFullname());
+        admin.setEmail(user.getEmail());
+        admin.setUserId(u.getId());
+        admin.setRole(role);
+        admin.setRevoke(0);
+        adminRepository.save(admin);
+    }
+
     private void valorizzaCampi(Model model, String username, String fullname, String email, String password, String role) {
         model.addAttribute("username", username);
         model.addAttribute("fullname", fullname);

@@ -30,16 +30,24 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
     boolean existsByTitle(String title);
     Course findCourseByAuthorAndId(String author, int courseId);
     Course findCourseById(Integer id);
-
     Course findById(int id);
-
     Course save(Course course);
-
     @Transactional
     @Modifying
     @Query("UPDATE Course c SET c.imagePath = :image WHERE c.id = :id")
     int updateImage(@Param("image") String image, @Param("id") int id);
+    // Metodo preferito: genera una EXISTS con join sull’owner
     boolean existsByIdAndUserOwner_Username(int id, String username);
+    // (Opzionale) JPQL equivalente, se vuoi controllo esplicito
+    @Query("select (count(c) > 0) from Course c where c.id = :id and c.userOwner.username = :u")
+    boolean isOwner(@Param("id") int id, @Param("u") String username);
+
+
+
+
+
+
+
 }
 
 

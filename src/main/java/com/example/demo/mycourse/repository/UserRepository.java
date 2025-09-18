@@ -25,6 +25,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select u from User u join u.roles r where r.name = :roleName")
     List<User> lockUsersByRoleName(@Param("roleName") String roleName);
+    // UserRepository
+    boolean existsByUsernameAndRoles_Name(String username, String roleName);
 
 
 
