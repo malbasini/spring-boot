@@ -3,6 +3,7 @@ import com.example.demo.mycourse.service.CaptchaValidator;
 import com.example.demo.mycourse.service.CourseService;
 import com.example.demo.mycourse.service.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,7 @@ public class LessonController {
     }
     // GET /lessons/new?courseId=... -> mostra form per creare una lezione
     @GetMapping("/new/{courseId}")
+    @PreAuthorize("hasAuthority('ROLE_EDITOR')")
     public String showCreateForm(@PathVariable("courseId") Integer courseId, Model
             model) {
         Lesson lesson = new Lesson();
@@ -44,6 +46,7 @@ public class LessonController {
     }
     // POST /lessons -> creazione (salvataggio) della lezione
     @PostMapping
+    @PreAuthorize("hasAuthority('ROLE_EDITOR')")
     public String createLesson(@ModelAttribute("lesson") Lesson lesson,
                                @RequestParam("courseId") Integer courseId,
                                @RequestParam("g-recaptcha-response") String captchaResponse,
@@ -81,6 +84,7 @@ public class LessonController {
     }
     // GET /lessons/{id}/edit -> mostra form di modifica
     @GetMapping("/{id}/edit")
+    @PreAuthorize("hasAuthority('ROLE_EDITOR')")
     public String editLesson(@PathVariable("id") Integer id,
                              @RequestParam(name = "message1",required = false) String message1,
                              Model model) {
@@ -96,6 +100,7 @@ public class LessonController {
     }
         // POST /lessons/{id} -> aggiornamento
     @PostMapping("/{id}/{courseId}")
+    @PreAuthorize("hasAuthority('ROLE_EDITOR')")
     public String updateLesson(@PathVariable("id") Integer id,
                                @PathVariable("courseId") Integer courseId,
                                @ModelAttribute("lesson") Lesson updatedLesson,
@@ -125,6 +130,7 @@ public class LessonController {
     }
         // POST /lessons/{id}/delete -> cancellazione
         @PostMapping("/{id}/delete")
+        @PreAuthorize("hasAuthority('ROLE_EDITOR')")
         public String deleteLesson(@PathVariable("id") Integer id) {
             Lesson lesson = lessonService.findById(id);
             if (lesson != null) {
@@ -134,6 +140,7 @@ public class LessonController {
             return "redirect:/courses";
         }
     @GetMapping("/{id}/detail")
+    @PreAuthorize("hasAuthority('ROLE_EDITOR')")
     public String detailLesson(@PathVariable("id") Integer id,Model model) {
         Lesson lesson = lessonService.findById(id);
         if (!lesson.equals(null))

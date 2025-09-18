@@ -95,14 +95,14 @@ public class CourseController {
 
     // ================== CREATE ==================
     @GetMapping("/new")
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_EDITOR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_EDITOR')")
     public String showCreateForm(Model model) {
         model.addAttribute("course", new Course());
         return "courses/create";
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN','ROLE_EDITOR')")
+    @PreAuthorize("hasAnyAuthority('ROLE_EDITOR')")
     public String create(@Valid @ModelAttribute("course") Course course,
                          BindingResult bindingResult,
                          @RequestParam("g-recaptcha-response") String captchaResponse,
@@ -130,7 +130,7 @@ public class CourseController {
         course.setFullPriceCurrency("EUR");
         course.setRating(BigDecimal.valueOf(1.0));
         course.setImagePath("default.png");
-        course.setAuthor(user.getUsername());
+        course.setAuthor(user.getFullname());
         course.setCurrentPriceAmount(BigDecimal.valueOf(0.0));
         course.setFullPriceAmount(BigDecimal.valueOf(0.0));
         course.setDescription(defaultIfBlank(course.getDescription(),

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,6 +19,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     @Autowired
@@ -35,7 +37,6 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN") // Accesso ristretto agli amministratori
                         .requestMatchers("/editor/**").hasAuthority("ROLE_EDITOR") // Accesso ristretto agli utenti TEACHER
                         .requestMatchers("/student/**").hasAuthority("ROLE_STUDENT") // Accesso ristretto agli utenti STUDENT
-                        .requestMatchers("/admin/role").permitAll()
                         .anyRequest().authenticated() // Tutto il resto richiede autenticazione
                 )
                 .formLogin(formLogin -> formLogin
@@ -57,8 +58,11 @@ public class SecurityConfig {
                         .tokenValiditySeconds(2 * 24 * 60 * 60) // 2 giorni in secondi (172.800)
                          .key("mykey")
                         .tokenRepository(persistentTokenRepository)
-        );
-
+                )
+                // 👇 differenzia UNAUTHENTICATED (401→login) da FORBIDDEN (403→pagina dedicata)
+                .exceptionHandling(ex -> ex
+                        .accessDeniedPage("/access-denied")   // utente autenticato ma senza permessi
+                );
         return http.build();
     }
 
