@@ -140,7 +140,6 @@ public class LessonController {
             return "redirect:/courses";
         }
     @GetMapping("/{id}/detail")
-    @PreAuthorize("hasAuthority('ROLE_EDITOR')")
     public String detailLesson(@PathVariable("id") Integer id,Model model) {
         Lesson lesson = lessonService.findById(id);
         if (!lesson.equals(null))

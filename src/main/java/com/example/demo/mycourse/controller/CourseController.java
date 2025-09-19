@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.security.Principal;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.List;
@@ -250,6 +251,7 @@ public class CourseController {
         // Manteniamo owner e campi non editabili lato form
         updatedCourse.setId(id);
         updatedCourse.setUserOwner(persisted.getUserOwner());
+        updatedCourse.setEmail(persisted.getUserOwner().getEmail());
         updatedCourse.setLessons(lessonRepository.findByCourseId(id));
         updatedCourse.setImagePath(persisted.getImagePath());
         updatedCourse.setRating(persisted.getRating());
@@ -336,10 +338,12 @@ public class CourseController {
     @PostMapping("/{courseId}/sendquestion")
     public String postQuestion(@RequestParam("g-recaptcha-response") String captchaResponse,
                                @PathVariable("courseId") Integer courseId,
-                               @RequestParam("question") String question) {
+                               @RequestParam("question") String question,
+                               Principal principal) {
+        String userName = principal.getName();
         Course course = courseService.findById(courseId);
-        String email = courseService.getEmailByCourseIdAndAuthor(courseId, course.getAuthor());
-
+        String email = course.getEmail();
+        String fullName = userRepository.findByUsername(userName).getFullname();
         if (question == null || question.isBlank()) {
             return "redirect:/courses/" + courseId + "/question?error="
                     + UriUtils.encode("Domanda obbligatoria", StandardCharsets.UTF_8);
@@ -354,7 +358,7 @@ public class CourseController {
         try {
             // mittente = studente loggato (già gestito altrove)
             // Invia email
-            emailService.sendSimpleEmail(email, "Nuova domanda sul corso", question.trim());
+            emailService.sendSimpleEmail(email, "Lo studente " + fullName + " ti ha inviato una domanda.", question.trim());
             return "redirect:/courses/course/" + course.getId() + "/detail?message="
                     + UriUtils.encode("Domanda inviata con successo!", StandardCharsets.UTF_8);
         } catch (Exception e) {
