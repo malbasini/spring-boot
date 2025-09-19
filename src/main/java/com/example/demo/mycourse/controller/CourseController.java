@@ -127,6 +127,7 @@ public class CourseController {
         User user = courseService.findByUsername(username);
 
         course.setUserOwner(user);
+        course.setEmail(user.getEmail());
         course.setCurrentPriceCurrency("EUR");
         course.setFullPriceCurrency("EUR");
         course.setRating(BigDecimal.valueOf(1.0));
