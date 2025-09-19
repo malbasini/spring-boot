@@ -48,8 +48,12 @@ public class RoleServiceImpl implements RoleService{
         }
 
         // se vuoi che ogni utente abbia UN SOLO ruolo effettivo:
-        user.getRoles().clear();
-        user.getRoles().add(role);
+        try {
+            user.getRoles().clear();
+            user.getRoles().add(role);
+        }
+        catch( Exception e){}
+
 
         // se invece l'utente può avere più ruoli,
         // sostituisci le due righe sopra con:
