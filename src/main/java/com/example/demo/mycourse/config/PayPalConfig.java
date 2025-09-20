@@ -27,11 +27,9 @@ public class PayPalConfig {
     public String getClientId() {
         return clientId;
     }
-
     public String getClientSecret() {
         return clientSecret;
     }
-
     public String getMode() {
         return mode;
     }

@@ -1,11 +1,12 @@
 package com.example.demo.mycourse.controller;
 
 import com.example.demo.mycourse.service.CommonPayService;
+import com.example.demo.mycourse.service.CourseService;
+import com.example.demo.mycourse.service.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import jakarta.servlet.http.HttpSession;
 import java.security.Principal;
 
@@ -13,9 +14,12 @@ import java.security.Principal;
 @RequestMapping("/payment/paypal")
 public class PayPalController {
 
-    @Autowired
-    private CommonPayService commonPayService;
+    private final CommonPayService commonPayService;
 
+    public PayPalController(CommonPayService commonPayService) {
+
+        this.commonPayService = commonPayService;
+    }
     @GetMapping("/{courseId}/pay")
     public String payWithPayPal(@PathVariable("courseId") Integer courseId,
                                 Principal principal,

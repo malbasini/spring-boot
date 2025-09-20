@@ -10,6 +10,7 @@ public class PermissionService {
 
     private final CourseRepository courseRepo;
     private final UserRepository userRepository;
+
     public PermissionService(CourseRepository courseRepo, UserRepository userRepository) {
         this.courseRepo = courseRepo;
         this.userRepository = userRepository;

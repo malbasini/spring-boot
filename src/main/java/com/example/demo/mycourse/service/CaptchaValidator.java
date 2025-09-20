@@ -14,9 +14,11 @@ import org.springframework.stereotype.Service;
 public class CaptchaValidator {
 
     private static final String GOOGLE_URL = "https://www.google.com/recaptcha/api/siteverify";
+    private final CaptchaSettings recaptchaConfig;
 
-    @Autowired
-    private CaptchaSettings recaptchaConfig;
+    public CaptchaValidator(CaptchaSettings recaptchaConfig) {
+        this.recaptchaConfig = recaptchaConfig;
+    }
 
     public boolean verifyCaptcha(String responseToken) {
         try {
@@ -35,7 +37,6 @@ public class CaptchaValidator {
                 os.write(params.getBytes());
                 os.flush();
             }
-
             // Leggo la risposta di Google
             InputStreamReader reader = new InputStreamReader(conn.getInputStream());
             StringBuilder responseBuilder = new StringBuilder();
@@ -52,11 +53,5 @@ public class CaptchaValidator {
             e.printStackTrace();
             return false;
         }
-    }
-    public String getSecretKey() {
-        return recaptchaConfig.getSecret();
-    }
-    public String getSiteKey() {
-        return recaptchaConfig.getSite();
     }
 }

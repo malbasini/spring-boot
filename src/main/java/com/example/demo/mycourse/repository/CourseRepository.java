@@ -12,12 +12,8 @@ import java.util.List;
 
 
 public interface CourseRepository extends JpaRepository<Course, Integer> {
-    @Transactional
-    @Modifying
-    @Query(value = "INSERT INTO Courses (Title) VALUES (:title)", nativeQuery = true)
+    @Query(value = "INSERT INTO Course (Title) VALUES (:title)", nativeQuery = true)
     int insertIgnore(@Param("title") String title);
-    @Query("SELECT c FROM Course c WHERE c.title = :title")
-    Course findByTitle(@Param("title") String title);
     Page<Course> findByTitleContainingIgnoreCase(String title, Pageable pageable);
     // Corsi con la valutazione più alta (limite 3)
     @Query("SELECT c FROM Course c ORDER BY c.rating DESC")
@@ -32,8 +28,6 @@ public interface CourseRepository extends JpaRepository<Course, Integer> {
     Course findCourseById(Integer id);
     Course findById(int id);
     Course save(Course course);
-    @Transactional
-    @Modifying
     @Query("UPDATE Course c SET c.imagePath = :image WHERE c.id = :id")
     int updateImage(@Param("image") String image, @Param("id") int id);
     // Metodo preferito: genera una EXISTS con join sull’owner

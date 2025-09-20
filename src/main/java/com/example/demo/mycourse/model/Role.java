@@ -20,7 +20,6 @@ public class Role {
     @ManyToMany(mappedBy = "roles") // definito da "register_roles"
     private Set<User> users;
 
-
     public Integer getId() {
         return id;
     }

@@ -10,9 +10,11 @@ import java.util.List;
 @Controller
 public class HomeController {
 
-    @Autowired
-    private CourseService courseService;
+    private final CourseService courseService;
 
+    public HomeController(CourseService courseService) {
+        this.courseService = courseService;
+    }
     @GetMapping("/")
     public String showHomePage(Model model) {
         // Recupera i corsi

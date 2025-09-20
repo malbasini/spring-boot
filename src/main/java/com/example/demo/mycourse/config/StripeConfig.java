@@ -10,6 +10,7 @@ import jakarta.annotation.PostConstruct;
 @PropertySource("classpath:application.properties")
 
 public class StripeConfig {
+
     @Value("${stripe.secret.key}")
     private String secretKey;
     @PostConstruct

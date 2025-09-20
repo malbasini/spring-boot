@@ -1,16 +1,20 @@
 package com.example.demo.mycourse.service;
 import com.example.demo.mycourse.repository.LessonRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-
-
 import com.example.demo.mycourse.model.Lesson;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class LessonServiceImpl implements LessonService {
-    @Autowired
-    private LessonRepository lessonRepository;
+
+    private final LessonRepository lessonRepository;
+
+    public LessonServiceImpl(LessonRepository lessonRepository) {
+        this.lessonRepository = lessonRepository;
+    }
+
     @Override
     public List<Lesson> findByCourseId(Integer courseId) {
         return lessonRepository.findByCourseId(courseId);
@@ -24,19 +28,14 @@ public class LessonServiceImpl implements LessonService {
         return lessonRepository.save(lesson);
     }
     @Override
-    public void deleteById(Integer id) {
-        lessonRepository.deleteById(id);
-    }
-
-    public Lesson saveLesson(Lesson lesson) {
-        return lessonRepository.save(lesson);
-    }
     public Lesson findByTitleAndCourseId(String title, int courseId) {
         return lessonRepository.findByTitleAndCourseId(title, courseId);
     }
-    public Lesson updateLesson(Lesson lesson) {
-        return lessonRepository.save(lesson);
+    @Override
+    public void updateLesson(Lesson lesson) {
+        lessonRepository.save(lesson);
     }
+    @Override
     public void deleteLesson(int id) {
         lessonRepository.deleteById(id);
     }

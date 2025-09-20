@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Lessons")
-
 public class Lesson {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

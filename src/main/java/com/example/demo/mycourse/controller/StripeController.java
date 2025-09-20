@@ -16,11 +16,11 @@ import java.security.Principal;
 @RequestMapping("/payment/stripe")
 public class StripeController {
 
-    @Autowired
-    private CommonPayService commonPayService;
+    private final CommonPayService commonPayService;
 
-    public StripeController() {
-        System.out.println("StripeController registered!");
+    public StripeController(CommonPayService commonPayService)
+    {
+        this.commonPayService = commonPayService;
     }
 
     @GetMapping("/{courseId}/pay")

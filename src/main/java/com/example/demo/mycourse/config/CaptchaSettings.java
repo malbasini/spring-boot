@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(prefix = "google.recaptcha.key")
+
 public class CaptchaSettings {
 
     private String site;
@@ -26,5 +27,4 @@ public class CaptchaSettings {
         this.secret = secret;
     }
 
-    // standard getters and setters
 }

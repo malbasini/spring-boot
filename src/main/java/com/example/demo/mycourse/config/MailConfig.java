@@ -29,7 +29,6 @@ public class MailConfig {
     public String getUser() {
         return user;
     }
-
     public String getPassword() {
         return password;
     }

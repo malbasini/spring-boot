@@ -14,9 +14,11 @@ import java.math.BigDecimal;
 @Service
 public class StripeService {
 
-    @Autowired
-    private SubscriptionService subscriptionService;
+    private final SubscriptionService subscriptionService;
 
+    public StripeService(SubscriptionService subscriptionService) {
+        this.subscriptionService = subscriptionService;
+    }
     /**
      * Esempio di metodo per finalizzare il pagamento
      * (se usi i Webhook, puoi spostare questa logica lì).
@@ -90,4 +92,3 @@ public class StripeService {
         return session.getUrl(); // Link di checkout
     }
 }
-

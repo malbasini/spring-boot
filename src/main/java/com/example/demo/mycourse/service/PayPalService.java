@@ -14,13 +14,14 @@ import java.math.BigDecimal;
 
 @Service
 public class PayPalService {
-    @Autowired
-    private APIContext apiContext; // Iniettato da PayPalConfig
-    @Autowired
-    private SubscriptionService subscriptionService;
-    @Autowired
-    private SubscriptionRepository subscriptionRepository;
 
+    private final APIContext apiContext; // Iniettato da PayPalConfig
+    private final SubscriptionService subscriptionService;
+
+    public PayPalService(APIContext apiContext, SubscriptionService subscriptionService) {
+        this.apiContext = apiContext;
+        this.subscriptionService = subscriptionService;
+    }
     /**
      * Crea il pagamento su PayPal e restituisce l'approvalLink per il redirect.
      */
@@ -87,8 +88,7 @@ public class PayPalService {
             if (session.getAttribute("userId") == null || session.getAttribute("courseId") == null) {
                 throw new IllegalStateException("I dettagli della sessione non sono stati trovati.");
             }
-            Subscription subscription = subscriptionService.createSubscription(userId, courseId, paidAmount, currency, "PAYPAL", executedPayment.getId());
-            return subscription;
+            return subscriptionService.createSubscription(userId, courseId, paidAmount, currency, "PAYPAL", executedPayment.getId());
         }
         return null; // se non approved
     }

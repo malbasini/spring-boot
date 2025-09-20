@@ -11,26 +11,19 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService{
-    @Autowired
-    BCryptPasswordEncoder passwordEncoder;
-    @Autowired
-    private RoleRepository roleRepository;
-    @Autowired
-    private UserRepository userRepository;
 
+    private final UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public User registerNewUser(User user) {
         return userRepository.save(user);
     }
-    
 
-    public List<Role> getAllRole()
-    {
-        return roleRepository.findAll();
-    }
-
-
+    @Override
     public User login(String userName) {
         User user = userRepository.findByUsername(userName);
         if (user == null)

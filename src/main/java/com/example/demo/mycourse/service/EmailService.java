@@ -8,13 +8,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailService {
 
-    @Autowired
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
+
+    public EmailService(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
 
     public void sendSimpleEmail(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         try {
-            message.setFrom("no-reply@localhost");
+            message.setFrom("no-reply@spring-boot");
             message.setTo(to);
             message.setSubject(subject);
             message.setText(text);
@@ -22,7 +25,6 @@ public class EmailService {
         catch (Exception e) {
             throw e;
         }
-
         mailSender.send(message);
     }
 }

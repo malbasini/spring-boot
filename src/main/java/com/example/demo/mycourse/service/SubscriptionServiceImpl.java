@@ -1,29 +1,32 @@
 package com.example.demo.mycourse.service;
 
 import com.example.demo.mycourse.model.Course;
-import java.util.Optional;
-import jakarta.transaction.Transactional;
 import com.example.demo.mycourse.model.Subscription;
 import com.example.demo.mycourse.model.User;
 import com.example.demo.mycourse.repository.CourseRepository;
 import com.example.demo.mycourse.repository.SubscriptionRepository;
 import com.example.demo.mycourse.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Optional;
 
 @Service
+@Transactional
 public class SubscriptionServiceImpl implements SubscriptionService {
-    @Autowired
-    private SubscriptionRepository subscriptionRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private CourseRepository courseRepository;
 
+    private final SubscriptionRepository subscriptionRepository;
+    private final UserRepository userRepository;
+    private final CourseRepository courseRepository;
+
+    public SubscriptionServiceImpl(CourseRepository courseRepository,
+                                   UserRepository userRepository,
+                                   SubscriptionRepository subscriptionRepository) {
+        this.courseRepository = courseRepository;
+        this.userRepository = userRepository;
+        this.subscriptionRepository = subscriptionRepository;
+
+    }
 
     /**
      * Crea (o aggiorna) l'iscrizione dopo il pagamento avvenuto.
@@ -36,7 +39,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
      * @param transactionId l'ID transazione restituito dal gateway
      * @return l'oggetto Subscription salvato
      */
-    @Transactional
+
     public Subscription createSubscription(
             Integer userId,
             Integer courseId,

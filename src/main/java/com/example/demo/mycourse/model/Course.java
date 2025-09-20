@@ -55,7 +55,6 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Lesson> lessons;
 
-
     // Relazione con l’utente (docente) che ha creato il corso
     @ManyToOne
     @JoinColumn(name = "idUser", nullable = false)

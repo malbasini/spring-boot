@@ -21,14 +21,21 @@ import java.security.Principal;
 @Service
 public class CommonPayService {
 
-    @Autowired
-    private PayPalService payPalService;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private CourseRepository courseRepository;
-    @Autowired
-    private StripeService stripeService;
+    private final PayPalService payPalService;
+    private final UserRepository userRepository;
+    private final CourseRepository courseRepository;
+    private final StripeService stripeService;
+
+    public CommonPayService(PayPalService payPalService,
+                            UserRepository userRepository,
+                            CourseRepository courseRepository,
+                            StripeService stripeService
+                            ) {
+        this.payPalService = payPalService;
+        this.userRepository = userRepository;
+        this.courseRepository = courseRepository;
+        this.stripeService = stripeService;
+    }
 
     // Esempio di rotta per avviare il pagamento
     public String payWithPayPal(@PathVariable("courseId") Integer courseId,

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(prefix = "admin")
+
 public class AdminConfig {
     @Value("${admin.email}")
     private String email;

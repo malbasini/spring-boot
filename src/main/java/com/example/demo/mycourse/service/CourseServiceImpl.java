@@ -13,21 +13,22 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class CourseServiceImpl implements CourseService {
-    @Autowired
-    private CourseRepository courseRepository;
-    @Autowired
-    private UserRepository userRepository;
 
-    @Override
-    public Iterable<Course> findAll() {
-        return courseRepository.findAll();
+    private final CourseRepository courseRepository;
+    private final UserRepository userRepository;
+
+    public CourseServiceImpl(CourseRepository courseRepository,
+                             UserRepository userRepository) {
+        this.courseRepository = courseRepository;
+        this.userRepository = userRepository;
     }
+
     @Override
     public Course findById(Integer id) {
         return courseRepository.findCourseById(id);
     }
-    @Transactional
     @Override
     public Course saveCourse(Course course) {
         return courseRepository.save(course);
@@ -36,50 +37,41 @@ public class CourseServiceImpl implements CourseService {
     public Course getCourseByIdWithLessons(Integer id) {
         return courseRepository.findCourseWithLessons(id);
     }
-
     @Override
-    public void deleteById(Integer id) {
-        courseRepository.deleteById(id);
-    }
-
-
     public Page<Course> findCourses(int page, int size, String title, String sortBy, String sortDirection) {
         Sort sort = Sort.by(sortBy);
         sort = sortDirection.equalsIgnoreCase("desc") ? sort.descending() : sort.ascending();
-
         Pageable pageable = PageRequest.of(page, size, sort);
-
         // Filtro per titolo
         if (title != null && !title.isEmpty()) {
             return courseRepository.findByTitleContainingIgnoreCase(title, pageable);
         }
-
         return courseRepository.findAll(pageable);
     }
+    @Override
     public List<Course> getTopRatedCourses() {
         Pageable pageable = PageRequest.of(0, 3); // Prima pagina, 3 risultati
         return courseRepository.findTopByRating(pageable);
     }
-
+    @Override
     public List<Course> getNewestCourses() {
         Pageable pageable = PageRequest.of(0, 3); // Prima pagina, 3 risultati
         return courseRepository.findTopByNewest(pageable);
     }
-    public Course updateCourse(Course course) {
-        return courseRepository.save(course);
+    @Override
+    public void updateCourse(Course course) {
+        courseRepository.save(course);
     }
+    @Override
     public void deleteCourse(int id) {
         courseRepository.deleteById(id);
     }
+    @Override
     public void updateImagePath(String image, int id) {
         courseRepository.updateImage(image,id);
     }
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
-    }
-
-    public String getEmailByCourseIdAndAuthor(int courseId, String author) {
-        return courseRepository.findCourseByAuthorAndId(author, courseId).getEmail();
     }
 }

@@ -19,21 +19,27 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class AuthController {
-    @Autowired
-    private CaptchaValidator captchaValidator;
-    @Autowired
-    BCryptPasswordEncoder passwordEncoder;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private RoleRepository roleRepository;
 
+    private final CaptchaValidator captchaValidator;
+    BCryptPasswordEncoder passwordEncoder;
+    private final UserService userService;
+    private final RoleRepository roleRepository;
     private final RoleService roleService;
     private final UserRepository userRepository;
 
-    public AuthController(RoleService roleService, UserRepository userRepository) {
+    public AuthController(RoleService roleService,
+                          UserRepository userRepository,
+                          RoleRepository roleRepository,
+                          UserService userService,
+                          CaptchaValidator captchaValidator,
+                          BCryptPasswordEncoder passwordEncoder
+
+                          ) {
         this.roleService = roleService;
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.userService = userService;
+        this.captchaValidator = captchaValidator;
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
@@ -128,21 +134,21 @@ public class AuthController {
             user.setPassword(passwordEncoder.encode(password));
             user.setEmail(email);
             user.setEnabled(true);
-            Role r = roleRepository.findByName(role);
-            user.setRoles(java.util.Collections.singleton(r));
+            Role ruolo = roleRepository.findByName(role);
+            user.setRoles(java.util.Collections.singleton(ruolo));
             User u = userService.registerNewUser(user);
             //AGGIUNGO LA RIGA ALLA TABELLA ROLE
             int userId = userRepository.findByEmail(email).getId();
             try {
                 roleService.assignSingleRole(userId, role);
-                model.addAttribute("message","Ruolo assegnato.");
+                model.addAttribute("message","Ruolo assegnato correttamente.");
                 return "security/register";
             } catch (Exception e) {
                 model.addAttribute("errore",e.getMessage());
                 return "security/register";
             }
         } catch (Exception e) {
-            ra.addFlashAttribute("errore",e.getMessage());
+            model.addAttribute("errore",e.getMessage());
             return "security/register";
         }
     }
